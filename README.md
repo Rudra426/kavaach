@@ -199,6 +199,7 @@ kavaach/
 ├── train_model.py           # Random Forest model training
 ├── generate_data.py         # Synthetic dataset generator (10,000 riders)
 ├── riders_training.csv      # Training dataset
+├── model.pkl                # Trained Random Forest model (auto-generated)
 ├── pincode_risk_map.json    # 75+ pincodes × flood/heat/AQI/cyclone risk scores
 ├── model_meta.json          # R², MAE, feature names, encodings
 ├── encoders.json            # Categorical encoding maps
@@ -225,7 +226,7 @@ python train_model.py
 uvicorn main:app --reload --port 8000
 
 # Open
-https://kavaach.onrender.com
+http://localhost:8000
 ```
 
 ---
