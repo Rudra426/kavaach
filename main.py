@@ -215,7 +215,7 @@ def predict_premium(data: PremiumInput):
         prediction_source = "formula_fallback"
 
     # ── Fairness cap ──────────────────────────────────────────────────────────
-    cap   = data.weekly_earnings * 0.15
+    cap = data.weekly_earnings * 0.04
     final = min(raw, cap)
 
     return {
