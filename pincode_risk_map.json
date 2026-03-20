@@ -1,0 +1,762 @@
+{
+  "400001": {
+    "area": "Fort / CST",
+    "city": "Mumbai",
+    "flood_risk": 0.7,
+    "heat_risk": 0.45,
+    "aqi_risk": 0.6,
+    "cyclone_risk": 0.3,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "400012": {
+    "area": "Dadar",
+    "city": "Mumbai",
+    "flood_risk": 0.88,
+    "heat_risk": 0.48,
+    "aqi_risk": 0.65,
+    "cyclone_risk": 0.3,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "400022": {
+    "area": "Shivaji Park",
+    "city": "Mumbai",
+    "flood_risk": 0.55,
+    "heat_risk": 0.44,
+    "aqi_risk": 0.58,
+    "cyclone_risk": 0.28,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "400050": {
+    "area": "Bandra West",
+    "city": "Mumbai",
+    "flood_risk": 0.38,
+    "heat_risk": 0.42,
+    "aqi_risk": 0.52,
+    "cyclone_risk": 0.32,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "400051": {
+    "area": "Bandra West",
+    "city": "Mumbai",
+    "flood_risk": 0.42,
+    "heat_risk": 0.43,
+    "aqi_risk": 0.54,
+    "cyclone_risk": 0.33,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "400053": {
+    "area": "Andheri West",
+    "city": "Mumbai",
+    "flood_risk": 0.6,
+    "heat_risk": 0.46,
+    "aqi_risk": 0.57,
+    "cyclone_risk": 0.29,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "400063": {
+    "area": "Andheri East",
+    "city": "Mumbai",
+    "flood_risk": 0.95,
+    "heat_risk": 0.5,
+    "aqi_risk": 0.68,
+    "cyclone_risk": 0.3,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "400064": {
+    "area": "Vikhroli",
+    "city": "Mumbai",
+    "flood_risk": 0.9,
+    "heat_risk": 0.49,
+    "aqi_risk": 0.66,
+    "cyclone_risk": 0.3,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "400068": {
+    "area": "Powai",
+    "city": "Mumbai",
+    "flood_risk": 0.72,
+    "heat_risk": 0.47,
+    "aqi_risk": 0.62,
+    "cyclone_risk": 0.28,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "400078": {
+    "area": "Chembur",
+    "city": "Mumbai",
+    "flood_risk": 0.8,
+    "heat_risk": 0.48,
+    "aqi_risk": 0.63,
+    "cyclone_risk": 0.3,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "110001": {
+    "area": "Connaught Place",
+    "city": "Delhi",
+    "flood_risk": 0.42,
+    "heat_risk": 0.92,
+    "aqi_risk": 0.96,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "110003": {
+    "area": "Civil Lines",
+    "city": "Delhi",
+    "flood_risk": 0.38,
+    "heat_risk": 0.9,
+    "aqi_risk": 0.94,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "110006": {
+    "area": "Karol Bagh",
+    "city": "Delhi",
+    "flood_risk": 0.75,
+    "heat_risk": 0.91,
+    "aqi_risk": 0.97,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "110018": {
+    "area": "Tilak Nagar",
+    "city": "Delhi",
+    "flood_risk": 0.35,
+    "heat_risk": 0.89,
+    "aqi_risk": 0.93,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "110044": {
+    "area": "Sarita Vihar",
+    "city": "Delhi",
+    "flood_risk": 0.8,
+    "heat_risk": 0.92,
+    "aqi_risk": 0.98,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "110051": {
+    "area": "Shahdara",
+    "city": "Delhi",
+    "flood_risk": 0.72,
+    "heat_risk": 0.91,
+    "aqi_risk": 0.96,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "110085": {
+    "area": "Rohini",
+    "city": "Delhi",
+    "flood_risk": 0.4,
+    "heat_risk": 0.9,
+    "aqi_risk": 0.94,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "110092": {
+    "area": "Preet Vihar",
+    "city": "Delhi",
+    "flood_risk": 0.68,
+    "heat_risk": 0.91,
+    "aqi_risk": 0.95,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "560001": {
+    "area": "MG Road",
+    "city": "Bengaluru",
+    "flood_risk": 0.4,
+    "heat_risk": 0.28,
+    "aqi_risk": 0.38,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "560008": {
+    "area": "Vasanth Nagar",
+    "city": "Bengaluru",
+    "flood_risk": 0.62,
+    "heat_risk": 0.3,
+    "aqi_risk": 0.42,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "560011": {
+    "area": "Rajajinagar",
+    "city": "Bengaluru",
+    "flood_risk": 0.55,
+    "heat_risk": 0.29,
+    "aqi_risk": 0.4,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "560034": {
+    "area": "Vijayanagar",
+    "city": "Bengaluru",
+    "flood_risk": 0.55,
+    "heat_risk": 0.3,
+    "aqi_risk": 0.4,
+    "cyclone_risk": 0.05,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "560038": {
+    "area": "Malleshwaram",
+    "city": "Bengaluru",
+    "flood_risk": 0.7,
+    "heat_risk": 0.31,
+    "aqi_risk": 0.44,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "560047": {
+    "area": "Koramangala",
+    "city": "Bengaluru",
+    "flood_risk": 0.35,
+    "heat_risk": 0.28,
+    "aqi_risk": 0.36,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "560076": {
+    "area": "HSR Layout",
+    "city": "Bengaluru",
+    "flood_risk": 0.78,
+    "heat_risk": 0.32,
+    "aqi_risk": 0.45,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "500001": {
+    "area": "Old City",
+    "city": "Hyderabad",
+    "flood_risk": 0.55,
+    "heat_risk": 0.72,
+    "aqi_risk": 0.55,
+    "cyclone_risk": 0.1,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "500008": {
+    "area": "Nampally",
+    "city": "Hyderabad",
+    "flood_risk": 0.7,
+    "heat_risk": 0.74,
+    "aqi_risk": 0.58,
+    "cyclone_risk": 0.1,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "500016": {
+    "area": "Begumpet",
+    "city": "Hyderabad",
+    "flood_risk": 0.48,
+    "heat_risk": 0.7,
+    "aqi_risk": 0.52,
+    "cyclone_risk": 0.1,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "500032": {
+    "area": "Secunderabad",
+    "city": "Hyderabad",
+    "flood_risk": 0.42,
+    "heat_risk": 0.69,
+    "aqi_risk": 0.5,
+    "cyclone_risk": 0.1,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "500038": {
+    "area": "Banjara Hills",
+    "city": "Hyderabad",
+    "flood_risk": 0.65,
+    "heat_risk": 0.73,
+    "aqi_risk": 0.56,
+    "cyclone_risk": 0.1,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "500081": {
+    "area": "Jubilee Hills",
+    "city": "Hyderabad",
+    "flood_risk": 0.35,
+    "heat_risk": 0.68,
+    "aqi_risk": 0.48,
+    "cyclone_risk": 0.09,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "600001": {
+    "area": "Parrys",
+    "city": "Chennai",
+    "flood_risk": 0.72,
+    "heat_risk": 0.76,
+    "aqi_risk": 0.5,
+    "cyclone_risk": 0.58,
+    "coastal_zone": 1,
+    "zone": "residential"
+  },
+  "600002": {
+    "area": "Mint",
+    "city": "Chennai",
+    "flood_risk": 0.68,
+    "heat_risk": 0.75,
+    "aqi_risk": 0.52,
+    "cyclone_risk": 0.56,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "600020": {
+    "area": "Mylapore",
+    "city": "Chennai",
+    "flood_risk": 0.85,
+    "heat_risk": 0.78,
+    "aqi_risk": 0.55,
+    "cyclone_risk": 0.6,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "600040": {
+    "area": "Adyar",
+    "city": "Chennai",
+    "flood_risk": 0.55,
+    "heat_risk": 0.74,
+    "aqi_risk": 0.48,
+    "cyclone_risk": 0.54,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "600042": {
+    "area": "Velachery",
+    "city": "Chennai",
+    "flood_risk": 0.9,
+    "heat_risk": 0.79,
+    "aqi_risk": 0.56,
+    "cyclone_risk": 0.62,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "600096": {
+    "area": "Sholinganallur",
+    "city": "Chennai",
+    "flood_risk": 0.48,
+    "heat_risk": 0.73,
+    "aqi_risk": 0.47,
+    "cyclone_risk": 0.52,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "700001": {
+    "area": "BBD Bagh",
+    "city": "Kolkata",
+    "flood_risk": 0.82,
+    "heat_risk": 0.65,
+    "aqi_risk": 0.72,
+    "cyclone_risk": 0.42,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "700012": {
+    "area": "Shyambazar",
+    "city": "Kolkata",
+    "flood_risk": 0.85,
+    "heat_risk": 0.66,
+    "aqi_risk": 0.74,
+    "cyclone_risk": 0.42,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "700027": {
+    "area": "Bhowanipore",
+    "city": "Kolkata",
+    "flood_risk": 0.78,
+    "heat_risk": 0.64,
+    "aqi_risk": 0.7,
+    "cyclone_risk": 0.4,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "700046": {
+    "area": "Jadavpur",
+    "city": "Kolkata",
+    "flood_risk": 0.88,
+    "heat_risk": 0.67,
+    "aqi_risk": 0.75,
+    "cyclone_risk": 0.44,
+    "coastal_zone": 1,
+    "zone": "residential"
+  },
+  "700064": {
+    "area": "Garia",
+    "city": "Kolkata",
+    "flood_risk": 0.92,
+    "heat_risk": 0.68,
+    "aqi_risk": 0.76,
+    "cyclone_risk": 0.45,
+    "coastal_zone": 1,
+    "zone": "hospital_adjacent"
+  },
+  "700091": {
+    "area": "Tollygunge",
+    "city": "Kolkata",
+    "flood_risk": 0.7,
+    "heat_risk": 0.63,
+    "aqi_risk": 0.68,
+    "cyclone_risk": 0.38,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "411001": {
+    "area": "Shivajinagar",
+    "city": "Pune",
+    "flood_risk": 0.5,
+    "heat_risk": 0.55,
+    "aqi_risk": 0.45,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "411006": {
+    "area": "Erandwane",
+    "city": "Pune",
+    "flood_risk": 0.62,
+    "heat_risk": 0.57,
+    "aqi_risk": 0.48,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "411014": {
+    "area": "Hadapsar",
+    "city": "Pune",
+    "flood_risk": 0.42,
+    "heat_risk": 0.54,
+    "aqi_risk": 0.44,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "411021": {
+    "area": "Kothrud",
+    "city": "Pune",
+    "flood_risk": 0.38,
+    "heat_risk": 0.53,
+    "aqi_risk": 0.42,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "411045": {
+    "area": "Kondhwa",
+    "city": "Pune",
+    "flood_risk": 0.55,
+    "heat_risk": 0.56,
+    "aqi_risk": 0.46,
+    "cyclone_risk": 0.04,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "380001": {
+    "area": "Relief Road",
+    "city": "Ahmedabad",
+    "flood_risk": 0.3,
+    "heat_risk": 0.88,
+    "aqi_risk": 0.62,
+    "cyclone_risk": 0.08,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "380006": {
+    "area": "Navrangpura",
+    "city": "Ahmedabad",
+    "flood_risk": 0.28,
+    "heat_risk": 0.87,
+    "aqi_risk": 0.6,
+    "cyclone_risk": 0.08,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "380009": {
+    "area": "Maninagar",
+    "city": "Ahmedabad",
+    "flood_risk": 0.45,
+    "heat_risk": 0.9,
+    "aqi_risk": 0.65,
+    "cyclone_risk": 0.08,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "380015": {
+    "area": "Satellite",
+    "city": "Ahmedabad",
+    "flood_risk": 0.25,
+    "heat_risk": 0.86,
+    "aqi_risk": 0.58,
+    "cyclone_risk": 0.07,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "380054": {
+    "area": "Thaltej",
+    "city": "Ahmedabad",
+    "flood_risk": 0.22,
+    "heat_risk": 0.85,
+    "aqi_risk": 0.56,
+    "cyclone_risk": 0.07,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "302001": {
+    "area": "Jaipur City",
+    "city": "Jaipur",
+    "flood_risk": 0.2,
+    "heat_risk": 0.9,
+    "aqi_risk": 0.56,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "302003": {
+    "area": "Jhotwara",
+    "city": "Jaipur",
+    "flood_risk": 0.18,
+    "heat_risk": 0.88,
+    "aqi_risk": 0.54,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "302012": {
+    "area": "Vaishali Nagar",
+    "city": "Jaipur",
+    "flood_risk": 0.22,
+    "heat_risk": 0.91,
+    "aqi_risk": 0.57,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "302017": {
+    "area": "Malviya Nagar",
+    "city": "Jaipur",
+    "flood_risk": 0.15,
+    "heat_risk": 0.87,
+    "aqi_risk": 0.52,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "226001": {
+    "area": "Hazratganj",
+    "city": "Lucknow",
+    "flood_risk": 0.52,
+    "heat_risk": 0.82,
+    "aqi_risk": 0.76,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "226003": {
+    "area": "Charbagh",
+    "city": "Lucknow",
+    "flood_risk": 0.58,
+    "heat_risk": 0.83,
+    "aqi_risk": 0.78,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "226010": {
+    "area": "Indira Nagar",
+    "city": "Lucknow",
+    "flood_risk": 0.45,
+    "heat_risk": 0.8,
+    "aqi_risk": 0.74,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "hospital_adjacent"
+  },
+  "226016": {
+    "area": "Gomti Nagar",
+    "city": "Lucknow",
+    "flood_risk": 0.62,
+    "heat_risk": 0.84,
+    "aqi_risk": 0.8,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "751001": {
+    "area": "Bhubaneswar Central",
+    "city": "Bhubaneswar",
+    "flood_risk": 0.65,
+    "heat_risk": 0.7,
+    "aqi_risk": 0.4,
+    "cyclone_risk": 0.78,
+    "coastal_zone": 1,
+    "zone": "residential"
+  },
+  "751002": {
+    "area": "Saheed Nagar",
+    "city": "Bhubaneswar",
+    "flood_risk": 0.6,
+    "heat_risk": 0.69,
+    "aqi_risk": 0.38,
+    "cyclone_risk": 0.75,
+    "coastal_zone": 1,
+    "zone": "residential"
+  },
+  "751010": {
+    "area": "Patia",
+    "city": "Bhubaneswar",
+    "flood_risk": 0.55,
+    "heat_risk": 0.68,
+    "aqi_risk": 0.36,
+    "cyclone_risk": 0.72,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "751024": {
+    "area": "Nayapalli",
+    "city": "Bhubaneswar",
+    "flood_risk": 0.7,
+    "heat_risk": 0.71,
+    "aqi_risk": 0.42,
+    "cyclone_risk": 0.8,
+    "coastal_zone": 1,
+    "zone": "residential"
+  },
+  "440001": {
+    "area": "Sitabuldi",
+    "city": "Nagpur",
+    "flood_risk": 0.42,
+    "heat_risk": 0.82,
+    "aqi_risk": 0.5,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "440010": {
+    "area": "Dharampeth",
+    "city": "Nagpur",
+    "flood_risk": 0.48,
+    "heat_risk": 0.84,
+    "aqi_risk": 0.52,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "440022": {
+    "area": "Manewada",
+    "city": "Nagpur",
+    "flood_risk": 0.38,
+    "heat_risk": 0.8,
+    "aqi_risk": 0.48,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "462001": {
+    "area": "MP Nagar",
+    "city": "Bhopal",
+    "flood_risk": 0.38,
+    "heat_risk": 0.72,
+    "aqi_risk": 0.46,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "462003": {
+    "area": "Kolar Road",
+    "city": "Bhopal",
+    "flood_risk": 0.44,
+    "heat_risk": 0.74,
+    "aqi_risk": 0.48,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "462016": {
+    "area": "Govindpura",
+    "city": "Bhopal",
+    "flood_risk": 0.32,
+    "heat_risk": 0.7,
+    "aqi_risk": 0.44,
+    "cyclone_risk": 0.02,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "641001": {
+    "area": "RS Puram",
+    "city": "Coimbatore",
+    "flood_risk": 0.3,
+    "heat_risk": 0.65,
+    "aqi_risk": 0.3,
+    "cyclone_risk": 0.2,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "641004": {
+    "area": "Gandhipuram",
+    "city": "Coimbatore",
+    "flood_risk": 0.28,
+    "heat_risk": 0.64,
+    "aqi_risk": 0.28,
+    "cyclone_risk": 0.18,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "641041": {
+    "area": "Peelamedu",
+    "city": "Coimbatore",
+    "flood_risk": 0.25,
+    "heat_risk": 0.63,
+    "aqi_risk": 0.26,
+    "cyclone_risk": 0.18,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "345001": {
+    "area": "Jaisalmer City",
+    "city": "Jaisalmer",
+    "flood_risk": 0.05,
+    "heat_risk": 0.96,
+    "aqi_risk": 0.2,
+    "cyclone_risk": 0.01,
+    "coastal_zone": 0,
+    "zone": "residential"
+  },
+  "345002": {
+    "area": "Jaisalmer Outskirts",
+    "city": "Jaisalmer",
+    "flood_risk": 0.04,
+    "heat_risk": 0.95,
+    "aqi_risk": 0.18,
+    "cyclone_risk": 0.01,
+    "coastal_zone": 0,
+    "zone": "residential"
+  }
+}

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kavaach — Premium Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #2563eb;
+      --accent-glow: rgba(37,99,235,0.2);
+      --accent-dim: rgba(37,99,235,0.07);
+      --accent-border: rgba(37,99,235,0.2);
+      --green: #16a05a; --green-dim: rgba(22,160,90,0.08);
+      --red: #dc3545; --red-dim: rgba(220,53,69,0.08);
+      --yellow: #c08010;
+      --glass: #ffffff;
+      --glass-border: rgba(37,99,235,0.1);
+      --glass-hover: #f5f8ff;
+      --text: #0f172a; --muted: rgba(15,23,42,0.45); --subtle: rgba(37,99,235,0.05);
+      --body-bg: #f0f4ff;
+      --blob1: rgba(79,142,247,0.15); --blob2: rgba(147,197,253,0.2); --blob3: rgba(37,99,235,0.08);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--body-bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 20px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── Ambient background blobs ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 20%, var(--blob1) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 500px at 80% 70%, var(--blob2) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 50% 100%, var(--blob3) 0%, transparent 70%);
+    }
+
+    .page-wrapper { max-width: 740px; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* ── Medicine background illustrations ── */
+    .med-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .med-bg svg { position: absolute; opacity: 0.055; }
+    .med-bg .m1 { top: 4%;  left: 2%;   width: 80px;  transform: rotate(-20deg); }
+    .med-bg .m2 { top: 12%; right: 3%;  width: 60px;  transform: rotate(15deg);  }
+    .med-bg .m3 { top: 28%; left: 5%;   width: 50px;  transform: rotate(40deg);  }
+    .med-bg .m4 { top: 35%; right: 6%;  width: 90px;  transform: rotate(-10deg); }
+    .med-bg .m5 { top: 52%; left: 1%;   width: 70px;  transform: rotate(25deg);  }
+    .med-bg .m6 { top: 55%; right: 2%;  width: 55px;  transform: rotate(-35deg); }
+    .med-bg .m7 { top: 70%; left: 7%;   width: 65px;  transform: rotate(10deg);  }
+    .med-bg .m8 { top: 72%; right: 4%;  width: 75px;  transform: rotate(-25deg); }
+    .med-bg .m9 { top: 85%; left: 3%;   width: 50px;  transform: rotate(50deg);  }
+    .med-bg .m10{ top: 88%; right: 7%;  width: 60px;  transform: rotate(-15deg); }
+    .med-bg .m11{ top: 20%; left: 45%;  width: 40px;  transform: rotate(30deg);  }
+    .med-bg .m12{ top: 62%; left: 42%;  width: 45px;  transform: rotate(-40deg); }
+
+    /* ── Header ── */
+    .header { text-align: center; padding: 40px 20px 28px; }
+    .header .logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 3rem; font-weight: 300;
+      color: var(--text); letter-spacing: 6px; text-transform: uppercase;
+      
+      text-shadow: 0 0 40px rgba(240,144,10,0.3);
+    }
+    .header .logo span { color: var(--accent); }
+    .header .tagline { margin-top: 8px; color: var(--muted); font-size: 0.86rem; font-weight: 400; letter-spacing: 0.5px; }
+    .header .devtrails {
+      display: inline-block; margin-top: 12px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      border: 1px solid var(--accent-border);
+      background: var(--accent-dim);
+      padding: 4px 12px; border-radius: 4px;
+      
+    }
+
+    /* ── Glass card ── */
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+    }
+    .card-title::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block; font-size: 0.74rem; font-weight: 700;
+      color: var(--muted); margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .form-label .req { color: var(--red); margin-left: 2px; }
+    .form-label .hint { font-weight: 400; color: var(--muted); font-size: 0.75rem; text-transform: none; letter-spacing: 0; opacity: 0.7; }
+    .form-input, .form-select {
+      width: 100%; padding: 11px 14px;
+      border: 1px solid var(--glass-border); border-radius: 8px;
+      font-size: 0.95rem; color: var(--text);
+      background: rgba(255,255,255,0.04);
+      
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    .form-input::placeholder { color: rgba(240,235,227,0.25); }
+    .form-select option { background: #ffffff; color: var(--text); }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim), 0 0 16px var(--accent-glow);
+      background: rgba(240,144,10,0.05);
+    }
+    .input-hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; opacity: 0.7; }
+
+    /* ── Pincode ── */
+    .pincode-row { display: flex; gap: 10px; align-items: flex-start; }
+    .pincode-row .form-input { flex: 1; }
+    .pincode-info {
+      background: var(--accent-dim); border: 1px solid var(--accent-border);
+      border-radius: 8px; padding: 10px 13px;
+      font-size: 0.82rem; color: var(--accent);
+      display: none; min-width: 170px;
+      
+    }
+    .pincode-info.show { display: block; }
+    .pincode-zone { font-size: 0.72rem; color: var(--muted); margin-top: 3px; font-weight: 600; text-transform: capitalize; }
+
+    /* ── Risk badge ── */
+    .risk-badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-top: 5px; letter-spacing: 0.5px; }
+    .risk-low    { background: var(--green-dim); color: var(--green); border: 1px solid rgba(37,201,122,0.25); }
+    .risk-medium { background: rgba(240,192,64,0.12); color: var(--yellow); border: 1px solid rgba(240,192,64,0.25); }
+    .risk-high   { background: var(--red-dim); color: var(--red); border: 1px solid rgba(240,80,80,0.25); }
+
+    /* ── Risk bars ── */
+    .risk-bars { margin-top: 10px; display: none; }
+    .risk-bars.show { display: block; }
+    .risk-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 0.71rem; color: var(--muted); }
+    .risk-icon { width: 58px; flex-shrink: 0; display: flex; align-items: center; gap: 4px; }
+    .risk-icon svg { opacity: 0.6; flex-shrink: 0; }
+    .p-icon { display: flex; align-items: center; justify-content: center; margin-bottom: 4px; opacity: 0.7; }
+    .plat-btn.selected .p-icon { opacity: 1; }
+    .risk-bar-track { flex: 1; height: 3px; background: var(--subtle); border-radius: 2px; overflow: hidden; }
+    .risk-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.5s ease; }
+
+    /* ── Slider ── */
+    .slider-labels { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--muted); margin-bottom: 10px; }
+    input[type="range"] {
+      -webkit-appearance: none; width: 100%; height: 3px; border-radius: 2px; outline: none; cursor: pointer;
+      background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--val,25%), rgba(255,255,255,0.1) var(--val,25%));
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+      background: var(--accent); border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 12px var(--accent-glow); cursor: pointer;
+    }
+    .slider-value {
+      text-align: center; font-family: 'Poppins', sans-serif;
+      font-size: 2.6rem; font-weight: 300; color: var(--accent);
+      margin-top: 12px; letter-spacing: 2px; 
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    /* ── Platform grid ── */
+    .platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+    @media (max-width: 460px) { .platform-grid { grid-template-columns: repeat(2, 1fr); } }
+    .plat-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 5px; padding: 13px 8px;
+      border: 1px solid var(--glass-border); border-radius: 10px;
+      background: var(--glass); cursor: pointer; transition: all 0.18s;
+      font-size: 0.78rem; font-weight: 600; color: var(--muted); user-select: none;
+      font-family: 'Poppins', sans-serif; 
+    }
+    .plat-btn .emoji { font-size: 1.3rem; }
+    .plat-btn:hover { border-color: var(--accent-border); background: var(--accent-dim); color: var(--text); }
+    .plat-btn.selected {
+      border-color: var(--accent); background: var(--accent-dim); color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-dim);
+    }
+
+    /* ── Two-col ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── Toggle ── */
+    .toggle-group { display: flex; gap: 9px; }
+    .toggle-btn {
+      flex: 1; padding: 11px;
+      border: 1px solid var(--glass-border); border-radius: 8px;
+      background: var(--glass); cursor: pointer; font-size: 0.875rem; font-weight: 600;
+      color: var(--muted); text-align: center; transition: all 0.18s;
+      font-family: 'Poppins', sans-serif; 
+    }
+    .toggle-btn:hover { border-color: var(--accent-border); color: var(--text); }
+    .toggle-btn.selected     { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); box-shadow: 0 0 10px var(--accent-dim); }
+    .toggle-btn.selected-yes { border-color: var(--green); background: var(--green-dim); color: var(--green); box-shadow: 0 0 10px var(--green-dim); }
+
+    /* ── Medicine opts ── */
+    .medicine-opts { display: none; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+    .medicine-opts.show { display: grid; }
+    .med-btn {
+      padding: 9px; border: 1px solid var(--glass-border); border-radius: 7px;
+      background: var(--glass); cursor: pointer; font-size: 0.78rem;
+      font-weight: 600; color: var(--muted); text-align: center; transition: all 0.18s;
+    }
+    .med-btn:hover { border-color: var(--accent-border); }
+    .med-btn.selected { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+
+    /* ── Submit ── */
+    .btn-calculate {
+      width: 100%; padding: 14px;
+      background: var(--accent);
+      color: #fff; border: none; border-radius: 9px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+      transition: all 0.18s; margin-top: 4px;
+      box-shadow: 0 4px 24px var(--accent-glow);
+    }
+    .btn-calculate:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 32px var(--accent-glow); }
+    .btn-calculate:active { transform: translateY(0); }
+    .btn-calculate:disabled { background: rgba(255,255,255,0.15); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── Error ── */
+    .error-msg {
+      background: var(--red-dim); color: var(--red);
+      border: 1px solid rgba(240,80,80,0.25);
+      padding: 10px 14px; border-radius: 7px;
+      font-size: 0.875rem; margin-top: 10px; display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* ── Result card ── */
+    .result-card {
+      background: var(--glass);
+      border: 1px solid var(--accent-border);
+      border-radius: 16px; padding: 28px 24px;
+      display: none; margin-bottom: 16px;
+      box-shadow: 0 0 48px var(--accent-dim), 0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .result-card.show { display: block; }
+    .result-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .result-premium {
+      font-family: 'Poppins', sans-serif; font-size: 4.5rem; font-weight: 300;
+      color: var(--accent); line-height: 1; letter-spacing: 2px; 
+      text-shadow: 0 0 32px var(--accent-glow);
+    }
+    .result-period { font-size: 0.82rem; color: var(--muted); margin-bottom: 20px; margin-top: 4px; }
+
+    /* ── Cap banner ── */
+    .cap-banner {
+      display: none; background: rgba(240,144,10,0.1);
+      border: 1px solid var(--accent-border); border-radius: 6px;
+      padding: 8px 12px; font-size: 0.78rem; margin-bottom: 16px; color: var(--accent);
+    }
+    .cap-banner.show { display: block; }
+
+    /* ── Risk factors in result ── */
+    .risk-factors-result { margin-bottom: 16px; }
+    .rf-row { display: flex; align-items: center; gap: 8px; font-size: 0.73rem; margin-bottom: 5px; color: var(--muted); }
+    .rf-label { width: 56px; }
+    .rf-track { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+    .rf-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+    .rf-val { width: 30px; text-align: right; }
+
+    /* ── Result grid ── */
+    .result-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; background: rgba(255,255,255,0.06);
+      border-radius: 10px; overflow: hidden; margin-bottom: 16px;
+    }
+    @media (max-width: 460px) { .result-grid { grid-template-columns: 1fr 1fr; } }
+    .result-stat { background: rgba(255,255,255,0.04); padding: 14px 12px; text-align: center; }
+    .result-stat .val { font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 300; color: var(--text);  }
+    .result-stat .lbl { font-size: 0.66rem; color: var(--muted); margin-top: 3px; letter-spacing: 0.8px; text-transform: uppercase; }
+
+    /* ── Breakdown ── */
+    .breakdown-toggle {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border);
+      color: var(--muted); padding: 7px 14px; border-radius: 6px;
+      font-size: 0.76rem; cursor: pointer; font-weight: 600;
+      font-family: 'Poppins', sans-serif; transition: all 0.2s;
+    }
+    .breakdown-toggle:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .breakdown-panel { display: none; margin-top: 12px; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; border: 1px solid var(--glass-border); }
+    .breakdown-panel.show { display: block; }
+    .bd-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.77rem; padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--muted);
+    }
+    .bd-row:last-child { border-bottom: none; }
+
+    /* ── Footer ── */
+    .footer { text-align: center; font-size: 0.72rem; color: var(--muted); padding: 16px 0 28px; letter-spacing: 0.5px; opacity: 0.6; }
+
+    /* ── ML Section ── */
+    .ml-section { margin-top: 8px; }
+
+    .ml-pipeline { display: flex; flex-direction: column; gap: 0; margin-bottom: 28px; }
+    .ml-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 0; border-bottom: 1px solid var(--glass-border);
+      position: relative;
+    }
+    .ml-step:last-child { border-bottom: none; }
+    .ml-step-icon {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      background: var(--accent-dim); border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+    }
+    .ml-step-body { flex: 1; }
+    .ml-step-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .ml-step-desc { font-size: 0.74rem; color: var(--muted); line-height: 1.65; }
+    .ml-step-num {
+      font-family: 'Poppins', sans-serif; font-size: 1.6rem; font-weight: 700;
+      color: var(--accent-border); letter-spacing: -1px; flex-shrink: 0;
+      line-height: 1; margin-top: 4px;
+    }
+    .ml-connector { width: 1px; height: 0; } /* spacing handled by gap */
+
+    .ml-features-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 14px; padding-top: 4px;
+    }
+    .ml-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .ml-feature-row { display: flex; align-items: center; gap: 10px; }
+    .ml-feature-label { font-size: 0.74rem; color: var(--muted); width: 150px; flex-shrink: 0; }
+    .ml-feature-bar-wrap { flex: 1; height: 4px; background: var(--subtle); border-radius: 2px; overflow: hidden; }
+    .ml-feature-bar { height: 100%; background: var(--accent); border-radius: 2px; }
+    .ml-feature-pct { font-size: 0.72rem; font-weight: 600; color: var(--accent); width: 32px; text-align: right; flex-shrink: 0; }
+
+    .ml-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--glass-border);
+      border: 1px solid var(--glass-border); border-radius: 10px; overflow: hidden;
+    }
+    @media (max-width: 500px) { .ml-stats { grid-template-columns: repeat(2, 1fr); } }
+    .ml-stat-item { background: var(--glass); padding: 16px 12px; text-align: center; }
+    .ml-stat-val { font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .ml-stat-lbl { font-size: 0.65rem; color: var(--muted); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.8px; }
+  </style>
+</head>
+<body>
+
+<!-- Medicine background -->
+<div class="med-bg">
+  <!-- Pill capsule -->
+  <svg class="m1" viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="78" height="30" rx="15" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="40" y1="1" x2="40" y2="31" stroke="#2563eb" stroke-width="2.5"/>
+    <rect x="1" y="1" width="39" height="30" rx="15" fill="#2563eb" fill-opacity="0.15"/>
+  </svg>
+  <!-- Syringe -->
+  <svg class="m2" viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="20" height="70" rx="4" stroke="#2563eb" stroke-width="2.5"/>
+    <rect x="26" y="30" width="8" height="40" rx="2" fill="#2563eb" fill-opacity="0.2"/>
+    <line x1="30" y1="90" x2="30" y2="115" stroke="#2563eb" stroke-width="2.5"/>
+    <path d="M25 115 L30 120 L35 115" stroke="#2563eb" stroke-width="2" fill="none"/>
+    <line x1="20" y1="20" x2="40" y2="20" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="15" y1="35" x2="20" y2="35" stroke="#2563eb" stroke-width="2"/>
+    <line x1="15" y1="50" x2="20" y2="50" stroke="#2563eb" stroke-width="2"/>
+    <line x1="15" y1="65" x2="20" y2="65" stroke="#2563eb" stroke-width="2"/>
+  </svg>
+  <!-- Round tablet -->
+  <svg class="m3" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="25" cy="25" r="23" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="2" y1="25" x2="48" y2="25" stroke="#2563eb" stroke-width="2"/>
+  </svg>
+  <!-- Medicine bottle -->
+  <svg class="m4" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="0" width="20" height="12" rx="3" stroke="#2563eb" stroke-width="2"/>
+    <path d="M10 28 Q10 18 20 18 L40 18 Q50 18 50 28 L50 90 Q50 98 42 98 L18 98 Q10 98 10 90 Z" stroke="#2563eb" stroke-width="2.5"/>
+    <rect x="16" y="40" width="28" height="30" rx="3" fill="#2563eb" fill-opacity="0.12" stroke="#2563eb" stroke-width="1.5"/>
+    <line x1="30" y1="48" x2="30" y2="62" stroke="#2563eb" stroke-width="2"/>
+    <line x1="23" y1="55" x2="37" y2="55" stroke="#2563eb" stroke-width="2"/>
+  </svg>
+  <!-- Capsule horizontal -->
+  <svg class="m5" viewBox="0 0 90 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="88" height="34" rx="17" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="45" y1="1" x2="45" y2="35" stroke="#2563eb" stroke-width="2"/>
+    <rect x="46" y="1" width="43" height="34" rx="17" fill="#2563eb" fill-opacity="0.18"/>
+  </svg>
+  <!-- Stethoscope simplified -->
+  <svg class="m6" viewBox="0 0 55 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 5 Q10 30 30 40 Q50 50 50 68" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="50" cy="72" r="6" stroke="#2563eb" stroke-width="2.5"/>
+    <path d="M20 5 Q20 30 30 40" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="10" cy="5" r="4" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="20" cy="5" r="4" stroke="#2563eb" stroke-width="2"/>
+  </svg>
+  <!-- Oval tablet -->
+  <svg class="m7" viewBox="0 0 70 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="35" cy="18" rx="34" ry="17" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="1" y1="18" x2="69" y2="18" stroke="#2563eb" stroke-width="1.5"/>
+  </svg>
+  <!-- Small pill bottle -->
+  <svg class="m8" viewBox="0 0 50 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="16" y="0" width="18" height="10" rx="2" stroke="#2563eb" stroke-width="2"/>
+    <rect x="8" y="10" width="34" height="65" rx="8" stroke="#2563eb" stroke-width="2.5"/>
+    <circle cx="18" cy="38" r="4" fill="#2563eb" fill-opacity="0.3"/>
+    <circle cx="32" cy="38" r="4" fill="#2563eb" fill-opacity="0.3"/>
+    <circle cx="25" cy="50" r="4" fill="#2563eb" fill-opacity="0.3"/>
+  </svg>
+  <!-- Cross / plus medical -->
+  <svg class="m9" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="18" y="2" width="14" height="46" rx="5" stroke="#2563eb" stroke-width="2.5"/>
+    <rect x="2" y="18" width="46" height="14" rx="5" stroke="#2563eb" stroke-width="2.5"/>
+  </svg>
+  <!-- Capsule angled -->
+  <svg class="m10" viewBox="0 0 80 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="78" height="30" rx="15" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="40" y1="1" x2="40" y2="31" stroke="#2563eb" stroke-width="2"/>
+    <rect x="40" y="1" width="39" height="30" rx="15" fill="#2563eb" fill-opacity="0.15"/>
+  </svg>
+  <!-- Dropper -->
+  <svg class="m11" viewBox="0 0 40 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="12" y="5" width="16" height="50" rx="8" stroke="#2563eb" stroke-width="2.5"/>
+    <path d="M20 55 Q12 65 20 75 Q28 65 20 55Z" stroke="#2563eb" stroke-width="2" fill="#2563eb" fill-opacity="0.15"/>
+    <rect x="16" y="0" width="8" height="8" rx="2" stroke="#2563eb" stroke-width="2"/>
+  </svg>
+  <!-- Shield -->
+  <svg class="m12" viewBox="0 0 45 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22.5 2 L42 10 L42 28 Q42 44 22.5 52 Q3 44 3 28 L3 10 Z" stroke="#2563eb" stroke-width="2.5"/>
+    <line x1="22.5" y1="18" x2="22.5" y2="36" stroke="#2563eb" stroke-width="2"/>
+    <line x1="14" y1="27" x2="31" y2="27" stroke="#2563eb" stroke-width="2"/>
+  </svg>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">KAV<span>AA</span>CH</div>
+    <div class="tagline">Parametric Insurance for Pharma Delivery Partners</div>
+    <div class="devtrails">DEVTrails 2026 · Guidewire</div>
+  </div>
+
+  <!-- Form -->
+  <div class="card">
+    <div class="card-title">Calculate Your Premium</div>
+
+    <!-- Pincode -->
+    <div class="form-group">
+      <label class="form-label">Pincode <span class="req">*</span></label>
+      <div class="pincode-row">
+        <input type="text" id="pincode" class="form-input" placeholder="e.g. 400063" maxlength="6" inputmode="numeric"/>
+        <div class="pincode-info" id="pincodeInfo">
+          <div id="pincodeArea" style="font-weight:600">—</div>
+          <div class="pincode-zone" id="pincodeZone">—</div>
+          <span class="risk-badge" id="riskBadge">—</span>
+        </div>
+      </div>
+      <div class="risk-bars" id="riskBars">
+        <div class="risk-bar-row">
+          <span class="risk-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg> Flood</span>
+          <div class="risk-bar-track"><div class="risk-bar-fill" id="rb_flood" style="width:0%"></div></div>
+          <span id="rv_flood">0</span>
+        </div>
+        <div class="risk-bar-row">
+          <span class="risk-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg> Heat</span>
+          <div class="risk-bar-track"><div class="risk-bar-fill" id="rb_heat" style="width:0%;background:#f59e0b"></div></div>
+          <span id="rv_heat">0</span>
+        </div>
+        <div class="risk-bar-row">
+          <span class="risk-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg> AQI</span>
+          <div class="risk-bar-track"><div class="risk-bar-fill" id="rb_aqi" style="width:0%;background:#8b5cf6"></div></div>
+          <span id="rv_aqi">0</span>
+        </div>
+        <div class="risk-bar-row">
+          <span class="risk-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12 2.1 9.1"/><path d="m12 12 5.4-8.5"/></svg> Cyclone</span>
+          <div class="risk-bar-track"><div class="risk-bar-fill" id="rb_cyclone" style="width:0%;background:#ef4444"></div></div>
+          <span id="rv_cyclone">0</span>
+        </div>
+      </div>
+      <div class="input-hint">We auto-detect your delivery zone & risk from pincode</div>
+    </div>
+
+    <!-- Weekly Earnings -->
+    <div class="form-group">
+      <label class="form-label">Weekly Earnings</label>
+      <div class="slider-labels"><span>₹1,500</span><span>₹15,000</span></div>
+      <input type="range" id="weeklyEarnings" min="1500" max="15000" step="100" value="5200"/>
+      <div class="slider-value" id="earningsDisplay">₹5,200 / week</div>
+    </div>
+
+    <!-- Platform -->
+    <div class="form-group">
+      <label class="form-label">Platform <span class="hint">(select all that apply)</span></label>
+      <div class="platform-grid">
+        <div class="plat-btn selected" data-val="tata1mg"    onclick="togglePlatform(this)">
+          <span class="p-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M9 12h6M12 9v6"/></svg></span>Tata 1mg</div>
+        <div class="plat-btn"          data-val="apollo24x7" onclick="togglePlatform(this)">
+          <span class="p-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>Apollo 24x7</div>
+        <div class="plat-btn"          data-val="pharmeasy"  onclick="togglePlatform(this)">
+          <span class="p-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg></span>PharmEasy</div>
+        <div class="plat-btn"          data-val="netmeds"    onclick="togglePlatform(this)">
+          <span class="p-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>Netmeds</div>
+        <div class="plat-btn"          data-val="phonepe"    onclick="togglePlatform(this)">
+          <span class="p-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>PhonePe</div>
+        <div class="plat-btn"          data-val="other"      onclick="togglePlatform(this)">
+          <span class="p-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>Other</div>
+      </div>
+    </div>
+
+    <!-- Delivery Type + Experience -->
+    <div class="two-col">
+      <div class="form-group">
+        <label class="form-label">Delivery Type</label>
+       <select id="deliveryType" class="form-select">
+  <option value="hyperlocal">Hyperlocal (under 2 hrs)</option>
+  <option value="same_day">Same Day</option>
+  <option value="scheduled">Scheduled</option>
+</select>
+
+      </div>
+      <div class="form-group">
+        <label class="form-label">Experience <span class="hint">(years)</span></label>
+        <input type="number" id="experience" class="form-input" value="1" min="0" max="20" step="0.5"/>
+      </div>
+    </div>
+
+    <!-- Cold Chain -->
+    <div class="form-group">
+  <label class="form-label">
+    Cold Chain Medicines?
+    <span class="hint"> e.g. Insulin, Vaccines, Biologics</span>
+  </label>
+  <div class="toggle-group">
+    <div class="toggle-btn" id="coldYes" onclick="setColdChain(true)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><path d="M12 2v20M4.93 4.93l14.14 14.14M2 12h20M4.93 19.07 19.07 4.93"/></svg>Yes — Cold Chain</div>
+    <div class="toggle-btn selected" id="coldNo" onclick="setColdChain(false)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>No — Regular</div>
+  </div>
+</div>
+
+
+    <button class="btn-calculate" id="calcBtn" onclick="calculatePremium()">
+      Calculate My Premium
+    </button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-title">Your Weekly Premium</div>
+    <div class="result-premium" id="resultWeekly">—</div>
+    <div class="result-period">per week &nbsp;·&nbsp; <span id="resultLocation"></span> &nbsp;<span id="riskLevelBadge"></span></div>
+
+    <div class="cap-banner" id="capBanner">Fairness Cap Applied — Premium capped at 15% of your weekly earnings</div>
+
+    <!-- Risk factor bars -->
+    <div class="risk-factors-result" id="rfResult"></div>
+
+    <div class="result-grid">
+      <div class="result-stat"><div class="val" id="resultMonthly">—</div><div class="lbl">Monthly</div></div>
+      <div class="result-stat"><div class="val" id="resultAnnual">—</div><div class="lbl">Annual</div></div>
+      <div class="result-stat"><div class="val" id="resultCoverage">—</div><div class="lbl">Coverage</div></div>
+    </div>
+
+    <button class="breakdown-toggle" onclick="toggleBreakdown()">View Breakdown</button>
+    <div class="breakdown-panel" id="breakdownPanel"></div>
+  </div>
+
+  <!-- How the ML Model Works -->
+  <div class="card ml-section">
+    <div class="card-title">How the Model Calculates Your Premium</div>
+
+    <!-- Step pipeline -->
+    <div class="ml-pipeline">
+      <div class="ml-step">
+        <div class="ml-step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10H3M21 6H3M21 14H3M21 18H3"/></svg>
+        </div>
+        <div class="ml-step-body">
+          <div class="ml-step-title">Input Collection</div>
+          <div class="ml-step-desc">Pincode, weekly earnings, delivery type, platform, experience, cold chain type, deliveries per day, no-claim history, and seasonal index are collected as the 19-feature input vector.</div>
+        </div>
+        <div class="ml-step-num">01</div>
+      </div>
+      <div class="ml-connector"></div>
+      <div class="ml-step">
+        <div class="ml-step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <div class="ml-step-body">
+          <div class="ml-step-title">Pincode Risk Lookup</div>
+          <div class="ml-step-desc">Your 6-digit pincode maps to a risk profile — flood score, heat index, AQI exposure, and cyclone probability — derived from historical IMD weather data across 75+ zones in 14 Indian cities.</div>
+        </div>
+        <div class="ml-step-num">02</div>
+      </div>
+      <div class="ml-connector"></div>
+      <div class="ml-step">
+        <div class="ml-step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="ml-step-body">
+          <div class="ml-step-title">Random Forest Prediction</div>
+          <div class="ml-step-desc">A trained Random Forest regression model (R² = 0.9861, MAE = ₹3.82) processes all 19 features simultaneously — including seasonal multipliers and delivery type weights — to predict your base premium.</div>
+        </div>
+        <div class="ml-step-num">03</div>
+      </div>
+      <div class="ml-connector"></div>
+      <div class="ml-step">
+        <div class="ml-step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="ml-step-body">
+          <div class="ml-step-title">Fairness Cap Applied</div>
+          <div class="ml-step-desc">The final premium is capped at 15% of weekly earnings — ensuring low-income riders are never priced out of coverage. No-claim history (up to 20% discount) is also applied.</div>
+        </div>
+        <div class="ml-step-num">04</div>
+      </div>
+    </div>
+
+    <!-- Feature weights -->
+    <div class="ml-features-title">Top Factors That Influence Your Premium</div>
+    <div class="ml-features">
+      <div class="ml-feature-row">
+        <span class="ml-feature-label">Pincode flood risk</span>
+        <div class="ml-feature-bar-wrap"><div class="ml-feature-bar" style="width:92%"></div></div>
+        <span class="ml-feature-pct">35%</span>
+      </div>
+      <div class="ml-feature-row">
+        <span class="ml-feature-label">Weekly earnings</span>
+        <div class="ml-feature-bar-wrap"><div class="ml-feature-bar" style="width:78%"></div></div>
+        <span class="ml-feature-pct">28%</span>
+      </div>
+      <div class="ml-feature-row">
+        <span class="ml-feature-label">Delivery type</span>
+        <div class="ml-feature-bar-wrap"><div class="ml-feature-bar" style="width:50%"></div></div>
+        <span class="ml-feature-pct">18%</span>
+      </div>
+      <div class="ml-feature-row">
+        <span class="ml-feature-label">Cold chain handling</span>
+        <div class="ml-feature-bar-wrap"><div class="ml-feature-bar" style="width:36%"></div></div>
+        <span class="ml-feature-pct">12%</span>
+      </div>
+      <div class="ml-feature-row">
+        <span class="ml-feature-label">Seasonal factor</span>
+        <div class="ml-feature-bar-wrap"><div class="ml-feature-bar" style="width:22%"></div></div>
+        <span class="ml-feature-pct">7%</span>
+      </div>
+    </div>
+
+    <!-- Model stats strip -->
+    <div class="ml-stats">
+      <div class="ml-stat-item">
+        <div class="ml-stat-val">0.9861</div>
+        <div class="ml-stat-lbl">Model R²</div>
+      </div>
+      <div class="ml-stat-item">
+        <div class="ml-stat-val">19</div>
+        <div class="ml-stat-lbl">Input Features</div>
+      </div>
+      <div class="ml-stat-item">
+        <div class="ml-stat-val">75+</div>
+        <div class="ml-stat-lbl">Pincode Zones</div>
+      </div>
+      <div class="ml-stat-item">
+        <div class="ml-stat-val">Random<br>Forest</div>
+        <div class="ml-stat-lbl">Algorithm</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Kavaach · Guidewire DevTrails 2026 · Parametric Insurance for Gig Workers</div>
+</div>
+
+<script>
+  const API = "";
+
+  // --- Slider ---
+  const slider = document.getElementById("weeklyEarnings");
+  slider.addEventListener("input", () => {
+    const val = parseInt(slider.value);
+    const pct = ((val - 1500) / 13500) * 100;
+    slider.style.setProperty("--val", pct + "%");
+    document.getElementById("earningsDisplay").textContent = "₹" + val.toLocaleString("en-IN") + " / week";
+  });
+  slider.dispatchEvent(new Event("input"));
+
+  // --- Pincode lookup ---
+  document.getElementById("pincode").addEventListener("input", async function () {
+    if (this.value.length === 6 && /^\d{6}$/.test(this.value)) {
+      try {
+        const res  = await fetch(`${API}/pincode/${this.value}`);
+        const data = await res.json();
+        if (data.found) {
+          document.getElementById("pincodeArea").textContent = `${data.area}, ${data.city}`;
+          const zoneLabel = data.zone.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+          document.getElementById("pincodeZone").textContent = "📍 " + zoneLabel;
+          const badge = document.getElementById("riskBadge");
+          badge.textContent = data.risk_level + " Risk";
+          badge.className = "risk-badge risk-" + data.risk_level.toLowerCase();
+          document.getElementById("pincodeInfo").classList.add("show");
+          const r = data.risks;
+          setBar("flood",   r.flood);
+          setBar("heat",    r.heat);
+          setBar("aqi",     r.aqi);
+          setBar("cyclone", r.cyclone);
+          document.getElementById("riskBars").classList.add("show");
+        }
+      } catch(e) {}
+    } else {
+      document.getElementById("pincodeInfo").classList.remove("show");
+      document.getElementById("riskBars").classList.remove("show");
+    }
+  });
+
+  function setBar(id, val) {
+    document.getElementById("rb_" + id).style.width = (val * 100) + "%";
+    document.getElementById("rv_" + id).textContent = val.toFixed(1);
+  }
+
+  // --- Platform ---
+  function togglePlatform(el) { el.classList.toggle("selected"); }
+
+  // --- Cold chain ---
+  let coldChain = false;
+  function setColdChain(val) {
+    coldChain = val;
+    document.getElementById("coldYes").className = "toggle-btn" + (val ? " selected-yes" : "");
+    document.getElementById("coldNo").className  = "toggle-btn" + (!val ? " selected" : "");
+  }
+
+  // --- Calculate ---
+  async function calculatePremium() {
+    const pincode = document.getElementById("pincode").value.trim();
+    const errEl   = document.getElementById("errorMsg");
+
+    if (!pincode || !/^\d{6}$/.test(pincode)) {
+      errEl.textContent = "Please enter a valid 6-digit pincode.";
+      errEl.classList.add("show"); return;
+    }
+    const platforms = [...document.querySelectorAll(".plat-btn.selected")].map(e => e.dataset.val);
+    if (!platforms.length) {
+      errEl.textContent = "Please select at least one platform.";
+      errEl.classList.add("show"); return;
+    }
+    errEl.classList.remove("show");
+    errEl.textContent = "";
+
+    const btn = document.getElementById("calcBtn");
+    btn.disabled = true;
+    btn.textContent = "Calculating…";
+
+    // --- Fetch ---
+    let responseData;
+    try {
+      const res = await fetch(`${API}/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pincode,
+          weekly_earnings:        parseInt(slider.value),
+          platforms,
+          delivery_type:          document.getElementById("deliveryType").value,
+          cold_chain:             coldChain,
+          medicine_type:          "regular_cold",
+          experience_years:       parseFloat(document.getElementById("experience").value) || 1,
+          avg_deliveries_per_day: 10,
+          no_claim_weeks:         0
+        })
+      });
+      responseData = await res.json();
+    } catch(e) {
+      errEl.textContent = "Could not connect to server. Make sure the backend is running.";
+      errEl.classList.add("show");
+      btn.disabled = false;
+      btn.textContent = "Calculate My Premium";
+      return;
+    }
+
+    // --- Display result ---
+    try {
+      showResult(responseData);
+    } catch(e) {
+      console.error("showResult crashed:", e);
+      errEl.textContent = "Display error: " + e.message;
+      errEl.classList.add("show");
+    }
+
+    btn.disabled = false;
+    btn.textContent = "Calculate My Premium";
+  }
+
+  function fmt(n) { return "₹" + Math.round(n).toLocaleString("en-IN"); }
+
+  function showResult(data) {
+    document.getElementById("resultWeekly").textContent   = fmt(data.weekly_premium);
+    document.getElementById("resultMonthly").textContent  = fmt(data.monthly_premium);
+    document.getElementById("resultAnnual").textContent   = fmt(data.annual_premium);
+    document.getElementById("resultCoverage").textContent = fmt(data.coverage_amount);
+
+    const loc = [data.area, data.city].filter(Boolean).join(", ");
+    document.getElementById("resultLocation").textContent = loc;
+    document.getElementById("riskLevelBadge").textContent = data.risk_level + " Risk";
+
+    // Cap banner
+    document.getElementById("capBanner").classList.toggle("show", data.cap_applied);
+
+    // Risk factor bars
+    const rf = data.risk_factors;
+    document.getElementById("rfResult").innerHTML = rf ? `
+      <div class="rf-row"><span class="rf-label">🌊 Flood</span><div class="rf-track"><div class="rf-fill" style="width:${rf.flood*100}%"></div></div><span class="rf-val">${rf.flood}</span></div>
+      <div class="rf-row"><span class="rf-label">🌡️ Heat</span><div class="rf-track"><div class="rf-fill" style="width:${rf.heat*100}%"></div></div><span class="rf-val">${rf.heat}</span></div>
+      <div class="rf-row"><span class="rf-label">💨 AQI</span><div class="rf-track"><div class="rf-fill" style="width:${rf.aqi*100}%"></div></div><span class="rf-val">${rf.aqi}</span></div>
+      <div class="rf-row"><span class="rf-label">🌀 Cyclone</span><div class="rf-track"><div class="rf-fill" style="width:${rf.cyclone*100}%"></div></div><span class="rf-val">${rf.cyclone}</span></div>
+    ` : "";
+
+    // Breakdown — uses model_accuracy since ML model doesn't return multipliers
+    document.getElementById("breakdownPanel").innerHTML = `
+      <div class="bd-row"><span>Weekly Earnings</span><span>${fmt(parseInt(slider.value))}</span></div>
+      <div class="bd-row"><span>Risk Level</span><span>${data.risk_level} (score ${data.risk_score})</span></div>
+      <div class="bd-row"><span>Zone</span><span>${(data.zone||"").replace(/_/g," ")}</span></div>
+      <div class="bd-row"><span>Prediction Source</span><span>${data.prediction_source === "ml_model" ? "ML Model" : "Formula"}</span></div>
+      <div class="bd-row"><span>Model Accuracy</span><span>${data.model_accuracy}</span></div>
+      ${data.cap_applied ? '<div class="bd-row"><span>Fairness Cap Applied</span><span>15% max</span></div>' : ""}
+    `;
+
+    const card = document.getElementById("resultCard");
+    card.classList.add("show");
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function toggleBreakdown() {
+    document.getElementById("breakdownPanel").classList.toggle("show");
+  }
+</script>
+
+</body>
+</html>
