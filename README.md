@@ -4,6 +4,16 @@
 
 ---
 
+## 🖼️ Live Preview
+
+<img width="981" height="1339" alt="Screenshot 2026-03-20 141128" src="https://github.com/user-attachments/assets/54f4edab-8093-446f-8bf3-ea123b8bef97" />
+<img width="1569" height="815" alt="Screenshot 2026-03-20 141144" src="https://github.com/user-attachments/assets/bec6deb0-0118-4e02-972d-45ea91ff379d" />
+
+
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100-green)
+![Render](https://img.shields.io/badge/Deployed-Render-purple)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 ## 👤 Persona — Who We're Building For
 
 **Segment chosen:** Pharma / Medicine Delivery Partners  
@@ -31,16 +41,6 @@
 
 ---
 
-## 🖼️ Live Preview
-
-<img width="981" height="1339" alt="Screenshot 2026-03-20 141128" src="https://github.com/user-attachments/assets/54f4edab-8093-446f-8bf3-ea123b8bef97" />
-<img width="1569" height="815" alt="Screenshot 2026-03-20 141144" src="https://github.com/user-attachments/assets/bec6deb0-0118-4e02-972d-45ea91ff379d" />
-
-
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100-green)
-![Render](https://img.shields.io/badge/Deployed-Render-purple)
-![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## 🔄 Application Workflow
 
