@@ -1,5 +1,8 @@
-__pycache__/
-*.pyc
-.env
-.DS_Store
-venv/
+backend/.env
+frontend/.env
+backend/kavaach.db
+backend/model.pkl
+backend/__pycache__/
+backend/*.pyc
+frontend/node_modules/
+frontend/dist/

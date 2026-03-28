@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
+httpx
+apscheduler
+razorpay
+pandas
+numpy
+scikit-learn
+pydantic

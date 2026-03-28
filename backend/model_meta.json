@@ -1,0 +1,43 @@
+{
+  "features": [
+    "weekly_earnings",
+    "deliveries_per_day",
+    "is_part_time",
+    "earnings_consistency",
+    "experience_months",
+    "multi_platform",
+    "cold_chain",
+    "flood_risk",
+    "heat_risk",
+    "aqi_risk",
+    "cyclone_risk",
+    "coastal_zone",
+    "seasonal_index",
+    "month",
+    "no_claim_weeks",
+    "no_claim_discount",
+    "delivery_model_enc",
+    "zone_type_enc",
+    "platform_enc"
+  ],
+  "delivery_model_enc": {
+    "scheduled": 0,
+    "same_day": 1,
+    "hyperlocal": 2
+  },
+  "zone_type_enc": {
+    "residential": 0,
+    "commercial": 1,
+    "industrial": 2,
+    "hospital_adjacent": 3
+  },
+  "platform_enc": {
+    "PharmEasy": 0,
+    "Netmeds": 1,
+    "Tata1mg": 2,
+    "Apollo24x7": 3,
+    "PhonePePincode": 4
+  },
+  "mae": 3.82,
+  "r2": 0.9861
+}
