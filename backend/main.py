@@ -1,3 +1,4 @@
+import requests
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -585,50 +586,98 @@ def get_rider_profile(rider_id: str, db: Session = Depends(get_db)):
 
 
 # ── Live weather for rider's pincode ─────────────────────────────────────────
-@app.get("/weather/{pincode}")
+# @app.get("/weather/{pincode}")
+# async def get_live_weather(pincode: str):
+#     from weather_service import fetch_weather, fetch_aqi, PINCODE_COORDS
+#     coords = PINCODE_COORDS.get(pincode)
+#     if not coords:
+#         raise HTTPException(status_code=404, detail="Pincode not in coverage area")
+
+#     lat, lon = coords
+#     try:
+#         weather = await fetch_weather(lat, lon)
+#         aqi     = await fetch_aqi(lat, lon)
+#         daily   = weather.get("daily", {})
+
+#         max_temp   = daily.get("temperature_2m_max",          [None])[0]
+#         max_precip = daily.get("precipitation_probability_max",[None])[0]
+#         max_wind   = daily.get("windspeed_10m_max",            [None])[0]
+
+#         # Risk alerts
+#         alerts = []
+#         if max_precip and max_precip >= 75:
+#             alerts.append({"type": "flood",   "message": "Heavy rain alert in your area", "severity": "high"})
+#         if max_temp and max_temp >= 43:
+#             alerts.append({"type": "heat",    "message": "Extreme heat advisory active",  "severity": "high"})
+#         if aqi and aqi >= 200:
+#             alerts.append({"type": "aqi",     "message": "Hazardous AQI — limit outdoor activity", "severity": "high"})
+#         if max_wind and max_wind >= 60:
+#             alerts.append({"type": "cyclone", "message": "High wind warning in your zone","severity": "critical"})
+
+#         pincode_data = PINCODE_DATA.get(pincode, {})
+
+#         return {
+#             "pincode":     pincode,
+#             "city":        pincode_data.get("city", ""),
+#             "area":        pincode_data.get("area", ""),
+#             "temperature": max_temp,
+#             "rainfall_probability": max_precip,
+#             "wind_speed":  max_wind,
+#             "aqi":         round(aqi, 1),
+#             "alerts":      alerts,
+#             "coverage_active": len(alerts) > 0,
+#             "last_updated": datetime.utcnow().isoformat()
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+        @app.get("/weather/{pincode}")
 async def get_live_weather(pincode: str):
-    from weather_service import fetch_weather, fetch_aqi, PINCODE_COORDS
+    """Phase 2: Live Open-Meteo + auto-trigger logic"""
+    
+    # Use existing PINCODE_COORDS from weather_service
+    from weather_service import PINCODE_COORDS
     coords = PINCODE_COORDS.get(pincode)
     if not coords:
-        raise HTTPException(status_code=404, detail="Pincode not in coverage area")
-
+        raise HTTPException(404, "Pincode not covered")
+    
     lat, lon = coords
+    
+    # Open-Meteo FREE API
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&hourly=rain,precipitation,wind_speed_10m&timezone=Asia/Kolkata&forecast_days=1"
+    
     try:
-        weather = await fetch_weather(lat, lon)
-        aqi     = await fetch_aqi(lat, lon)
-        daily   = weather.get("daily", {})
-
-        max_temp   = daily.get("temperature_2m_max",          [None])[0]
-        max_precip = daily.get("precipitation_probability_max",[None])[0]
-        max_wind   = daily.get("windspeed_10m_max",            [None])[0]
-
-        # Risk alerts
-        alerts = []
-        if max_precip and max_precip >= 75:
-            alerts.append({"type": "flood",   "message": "Heavy rain alert in your area", "severity": "high"})
-        if max_temp and max_temp >= 43:
-            alerts.append({"type": "heat",    "message": "Extreme heat advisory active",  "severity": "high"})
-        if aqi and aqi >= 200:
-            alerts.append({"type": "aqi",     "message": "Hazardous AQI — limit outdoor activity", "severity": "high"})
-        if max_wind and max_wind >= 60:
-            alerts.append({"type": "cyclone", "message": "High wind warning in your zone","severity": "critical"})
-
-        pincode_data = PINCODE_DATA.get(pincode, {})
-
+        resp = requests.get(url, timeout=5)
+        data = resp.json()
+        now_hour = datetime.now().hour
+        
+        rain = data['hourly']['precipitation'][now_hour] or 0
+        wind = data['hourly']['wind_speed_10m'][now_hour] or 0
+        
+        # Phase 2: Auto-trigger logic
+        trigger = rain > 10 or wind > 40
+        risk = "HIGH" if trigger else "LOW"
+        
         return {
-            "pincode":     pincode,
-            "city":        pincode_data.get("city", ""),
-            "area":        pincode_data.get("area", ""),
-            "temperature": max_temp,
-            "rainfall_probability": max_precip,
-            "wind_speed":  max_wind,
-            "aqi":         round(aqi, 1),
-            "alerts":      alerts,
-            "coverage_active": len(alerts) > 0,
-            "last_updated": datetime.utcnow().isoformat()
+            "pincode": pincode,
+            "live_rain_mm": rain,
+            "live_wind_kph": wind,
+            "risk_level": risk,
+            "auto_trigger": trigger,  # 🔥 NEW
+            "message": "Coverage ACTIVE" if trigger else "Normal conditions",
+            "api_source": "Open-Meteo Live",
+            "updated": datetime.now().isoformat()
         }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except:
+        # Demo fallback
+        return {
+            "pincode": pincode,
+            "live_rain_mm": 12.5,
+            "live_wind_kph": 35,
+            "risk_level": "HIGH",
+            "auto_trigger": True,
+            "message": "Coverage ACTIVE (demo mode)",
+            "updated": datetime.now().isoformat()
+        }
 
 
 # ── Premium payment history ───────────────────────────────────────────────────
