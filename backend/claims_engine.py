@@ -69,7 +69,36 @@ def calculate_payout(policy: Policy, tier: str) -> dict:
         return {"immediate": round(payout * 0.6, 2), "held": round(payout * 0.4, 2)}
     else:
         return {"immediate": 0.0, "held": round(payout, 2)}
-
+# ── PHASE 2: RFI Red Flag Explainability ──────────────────────────────────────
+def get_rfi_details(claim) -> dict:
+    """IRDAI-style red flag indicators + explainability"""
+    flags = []
+    
+    # Platform activity flags
+    if claim.recent_claims > 2: 
+        flags.append("RAPID_REPEAT_CLAIMS")
+    if getattr(claim, 'distance_km', 0) > 50:
+        flags.append("LONG_DISTANCE")
+    
+    # Risk flags  
+    pincode_info = PINCODE_DATA.get(claim.pincode or "", {})
+    if pincode_info.get("risk_score", 0) > 0.7:
+        flags.append("HIGH_RISK_PINCODE")
+    
+    # Trigger flags
+    if claim.trigger_severity > 1.5:
+        flags.append("HIGH_SEVERITY_TRIGGER")
+    
+    score = len(flags) * 15  # Simple scoring
+    tier = "🟢 GREEN" if score < 30 else "🟡 YELLOW" if score < 50 else "🔴 RED"
+    
+    return {
+        "rfi_flags": flags,
+        "rfi_count": len(flags),
+        "rfi_score": score,
+        "tier": tier,
+        "review_reason": f"{len(flags)} red flags detected"
+    }
 
 def process_trigger_for_riders(trigger_id: str):
     db: Session = SessionLocal()
@@ -134,15 +163,26 @@ def process_trigger_for_riders(trigger_id: str):
                   f"Tier: {tier} | Pay: ₹{payout_split['immediate']} "
                   f"| Hold: ₹{payout_split['held']}")
 
-            results.append({
-                "rider_id":     rider.id,
-                "rider_name":   rider.name,
-                "claim_id":     claim.id,
-                "fraud_score":  fraud_score,
-                "tier":         tier,
-                "payout_amount": payout_split["immediate"],
-                "held_amount":  payout_split["held"]
-            })
+            # results.append({
+            #     "rider_id":     rider.id,
+            #     "rider_name":   rider.name,
+            #     "claim_id":     claim.id,
+            #     "fraud_score":  fraud_score,
+            #     "tier":         tier,
+            #     "payout_amount": payout_split["immediate"],
+            #     "held_amount":  payout_split["held"]
+            # })
+        rfi_details = get_rfi_details(claim)
+results.append({
+    "rider_id":     rider.id,
+    "rider_name":   rider.name,
+    "claim_id":     claim.id,
+    "fraud_score":  fraud_score,
+    "tier":         tier,
+    "rfi_details":  rfi_details,  # ← NEW PHASE 2
+    "payout_amount": payout_split["immediate"],
+    "held_amount":  payout_split["held"]
+})
 
         db.commit()
 
