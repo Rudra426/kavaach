@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pydantic
+scikit-learn
+pandas
+numpy
+requests
+python-dotenv
+apscheduler
+httpx
+python-multipart
+razorpay
