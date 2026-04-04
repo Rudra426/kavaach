@@ -14,6 +14,29 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100-green)
 ![Render](https://img.shields.io/badge/Deployed-Render-purple)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+[![Phase 2](https://img.shields.io/badge/Phase_2-COMPLETE-brightgreen)]
+[![Weather Live](https://img.shields.io/badge/Weather-Live-blue)]
+[![RFI Fraud](https://img.shields.io/badge/RFI-4_Flags-orange)]
+
+
+## 🚀 PHASE 2 UPDATES — LIVE & PRODUCTION READY
+
+**Status: COMPLETE ✅ Deployed April 4, 2026**
+
+### New Live Features:
+
+| Feature | Endpoint | Status |
+|---------|----------|--------|
+| **Live Weather API** | `GET /weather/390001` | ✅ Open-Meteo real-time |
+| **RFI Fraud Flags** | `/dashboard/{rider_id}` | ✅ 4 red flags + explainability |
+| **Auto-Trigger** | `/trigger/manual` | ✅ Fires claims → payouts |
+| **Fraud Dashboard** | `/admin/claims` | ✅ Tier review + RFI details |
+
+### Phase 2 Demo Flow:
+
+**Live Test:** [https://kavaach.onrender.com/weather/390001](https://kavaach.onrender.com/weather/390001)
+**API Docs:** [https://kavaach.onrender.com/docs](https://kavaach.onrender.com/docs)
+
 ## 👤 Persona — Who We're Building For
 
 **Segment chosen:** Pharma / Medicine Delivery Partners  
@@ -250,6 +273,9 @@ http://localhost:8000
 | **Phase 3** 🔲 | 5–6 | Scale & Optimise | Fraud detection implementation, UPI sandbox payout, insurer dashboard, final pitch |
 
 ---
+| **Phase 1** ✅ | 1–2 | Foundation | ML premiums, risk map
+| **Phase 2** ✅ | 3–4 | **LIVE** | Weather API + RFI fraud **(April 2026)**
+| **Phase 3** 🔲 | 5–6 | Scale | UPI payouts, analytics
 
 ## 🔗 Live Demo
 
