@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #f7f5f0;
+  --color-surface: #ffffff;
+  --color-primary: #1a3a2a;
+  --color-accent: #e8732a;
+  --color-accent-2: #2e7d5e;
+  --color-muted: #8a8478;
+  --color-danger: #c0392b;
+  --color-warning: #d4a017;
+  --color-border: #e2ded6;
+  --color-text: #1c1c1a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Subtle grain texture for warm paper feel */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-display font-semibold text-white transition duration-200 hover:brightness-95;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-surface px-5 py-2.5 font-medium text-text transition duration-200 hover:border-primary hover:text-primary;
+  }
+
+  .card {
+    @apply rounded-2xl border border-border bg-surface p-5 shadow-card;
+  }
+
+  .badge-green {
+    @apply inline-flex items-center rounded-full bg-[rgba(46,125,94,0.16)] px-3 py-1 text-xs font-semibold text-accent2;
+  }
+
+  .badge-yellow {
+    @apply inline-flex items-center rounded-full bg-[rgba(212,160,23,0.16)] px-3 py-1 text-xs font-semibold text-warning;
+  }
+
+  .badge-red {
+    @apply inline-flex items-center rounded-full bg-[rgba(192,57,43,0.15)] px-3 py-1 text-xs font-semibold text-danger;
+  }
+
+  .input-base {
+    @apply w-full rounded-xl border-[1.5px] border-border bg-white px-4 py-3.5 text-[15px] text-text outline-none transition-all duration-200 placeholder:text-muted focus:border-primary focus:shadow-[0_0_0_3px_rgba(26,58,42,0.08)];
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
