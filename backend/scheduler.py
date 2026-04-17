@@ -10,7 +10,9 @@ from payout_service import process_payout
 from servicenow_client import create_claim_ticket, create_premium_due_alert
 from main import calculate_premium
 
+
 scheduler = AsyncIOScheduler()
+
 
 async def job_process_trigger(trigger_id: str):
     try:
@@ -29,15 +31,17 @@ async def job_process_trigger(trigger_id: str):
     except Exception as e:
         print(f"⚠️ [SCHEDULER] Trigger process error: {e}")
 
+
+
 async def job_poll_weather():
-    print(f"
-⏰ [SCHEDULER] Weather poll — {datetime.now().strftime('%H:%M:%S')}")
+    print(f"\n⏰ [SCHEDULER] Weather poll — {datetime.now().strftime('%H:%M:%S')}")  # ✅ FIXED
     try:
         fired_triggers = await poll_all_pincodes()
         for trigger in fired_triggers:
             await job_process_trigger(trigger["trigger_id"])
     except Exception as e:
         print(f"⚠️ [SCHEDULER] Weather poll error: {e}")
+
 
 async def job_resolve_stale_triggers():
     db = SessionLocal()
@@ -53,6 +57,7 @@ async def job_resolve_stale_triggers():
         print(f"⚠️ [SCHEDULER] Stale trigger cleanup error: {e}")
     finally:
         db.close()
+
 
 async def job_weekly_renewal():
     db = SessionLocal()
@@ -78,6 +83,7 @@ async def job_weekly_renewal():
         print(f"⚠️ [SCHEDULER] Renewal error: {e}")
     finally:
         db.close()
+
 
 async def job_premium_due_alerts():
     db = SessionLocal()
@@ -106,3 +112,4 @@ def start_scheduler():
 def stop_scheduler():
     scheduler.shutdown()
     print("🛑 [SCHEDULER] Stopped")
+
