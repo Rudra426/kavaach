@@ -5,11 +5,13 @@ from dotenv import load_dotenv
 from database import SessionLocal
 from models import Claim, Rider, TriggerEvent
 
+
 load_dotenv()
 SN_INSTANCE = os.getenv("SERVICENOW_INSTANCE", "").strip()
 SN_USER = os.getenv("SERVICENOW_USER", "admin").strip()
 SN_PASS = os.getenv("SERVICENOW_PASS", "").strip()
 HEADERS = {"Content-Type": "application/json", "Accept": "application/json"}
+
 
 async def _post_incident(payload: dict, mock_id: str) -> dict:
     if not SN_INSTANCE:
@@ -24,6 +26,7 @@ async def _post_incident(payload: dict, mock_id: str) -> dict:
     except Exception:
         return {"success": True, "ticket_id": mock_id, "mode": "mock_fallback"}
 
+
 async def create_claim_ticket(claim_id: str) -> dict:
     db = SessionLocal()
     try:
@@ -35,13 +38,15 @@ async def create_claim_ticket(claim_id: str) -> dict:
         mock_id = f"SN_MOCK_{claim_id}"
         payload = {
             "short_description": f"Kavaach Claim Review — {rider.name if rider else 'Unknown'} [{claim.tier}]",
-            "description": f"Claim ID: {claim_id}
-Rider: {rider.name if rider else 'Unknown'}
-Pincode: {rider.pincode if rider else 'N/A'}
-Trigger: {trigger.trigger_type if trigger else 'N/A'}
-Fraud Score: {claim.fraud_score}/100
-Tier: {claim.tier}
-Held Amount: ₹{claim.held_amount}",
+            "description": (
+                f"Claim ID: {claim_id}\n"
+                f"Rider: {rider.name if rider else 'Unknown'}\n"
+                f"Pincode: {rider.pincode if rider else 'N/A'}\n"
+                f"Trigger: {trigger.trigger_type if trigger else 'N/A'}\n"
+                f"Fraud Score: {claim.fraud_score}/100\n"
+                f"Tier: {claim.tier}\n"
+                f"Held Amount: Rs.{claim.held_amount}"
+            ),
             "urgency": "1" if claim.tier == "RED" else "2",
             "impact": "1" if claim.tier == "RED" else "2",
             "category": "inquiry"
@@ -57,49 +62,59 @@ Held Amount: ₹{claim.held_amount}",
     finally:
         db.close()
 
+
 async def create_onboarding_task(rider_id: str, name: str, phone: str, pincode: str, city: str, platform: str) -> dict:
     payload = {
         "short_description": f"New Rider Onboarding — {name} [{rider_id}]",
-        "description": f"Rider ID: {rider_id}
-Name: {name}
-Phone: {phone}
-Pincode: {pincode} — {city}
-Platform: {platform}
-Joined At: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+        "description": (
+            f"Rider ID: {rider_id}\n"
+            f"Name: {name}\n"
+            f"Phone: {phone}\n"
+            f"Pincode: {pincode} — {city}\n"
+            f"Platform: {platform}\n"
+            f"Joined At: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}"
+        ),
         "urgency": "3",
         "impact": "3",
         "category": "inquiry"
     }
     return await _post_incident(payload, f"SN_ONBOARD_{rider_id}")
 
+
 async def create_premium_due_alert(rider_id: str, name: str, phone: str, upi_id: str, amount: float, due_date: str) -> dict:
     payload = {
-        "short_description": f"Premium Due — {name} | ₹{amount}",
-        "description": f"Rider ID: {rider_id}
-Name: {name}
-Phone: {phone}
-UPI ID: {upi_id}
-Amount Due: ₹{amount}
-Due Date: {due_date}",
+        "short_description": f"Premium Due — {name} | Rs.{amount}",
+        "description": (
+            f"Rider ID: {rider_id}\n"
+            f"Name: {name}\n"
+            f"Phone: {phone}\n"
+            f"UPI ID: {upi_id}\n"
+            f"Amount Due: Rs.{amount}\n"
+            f"Due Date: {due_date}"
+        ),
         "urgency": "3",
         "impact": "3",
         "category": "inquiry"
     }
     return await _post_incident(payload, f"SN_PREMIUM_{rider_id}")
 
+
 async def create_mass_trigger_alert(pincode: str, city: str, trigger_type: str, rider_count: int, total_payout: float) -> dict:
     payload = {
         "short_description": f"MASS DISRUPTION — {trigger_type.upper()} in {city} ({pincode}) | {rider_count} riders",
-        "description": f"Trigger: {trigger_type.upper()}
-Location: {city} — {pincode}
-Riders Affected: {rider_count}
-Total Payout: ₹{total_payout:,.2f}
-Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+        "description": (
+            f"Trigger: {trigger_type.upper()}\n"
+            f"Location: {city} — {pincode}\n"
+            f"Riders Affected: {rider_count}\n"
+            f"Total Payout: Rs.{total_payout:,.2f}\n"
+            f"Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}"
+        ),
         "urgency": "1",
         "impact": "1",
         "category": "inquiry"
     }
     return await _post_incident(payload, f"SN_MASS_{pincode}_{trigger_type}")
+
 
 async def resolve_ticket(ticket_id: str, resolution: str = "Approved by reviewer") -> dict:
     if not SN_INSTANCE or "MOCK" in ticket_id:
