@@ -18,6 +18,33 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import gsap from 'gsap'
 
+// ── Phase 3 Compliance Pages ────────────────────────────────────────────────
+import { ConsentPage } from './pages/ConsentPage'
+import { KeyFactsPage } from './pages/KeyFactsPage'
+import { PrivacyDashboard } from './pages/PrivacyDashboard'
+import { GrievancePage } from './pages/GrievancePage'
+import { PrivacyNoticePage } from './pages/PrivacyNoticePage'
+
+// ── Compliance Banner ───────────────────────────────────────────────────────
+function ComplianceBanner() {
+  return (
+    <div
+      style={{ zIndex: 9999 }}
+      className="w-full bg-yellow-50 border-b border-yellow-200 px-4 py-2 text-center text-xs text-yellow-800 font-medium sticky top-0"
+    >
+      ⚠️ Kavaach is a regulatory-compliant prototype for deployment via a licensed insurer
+      partnership. This demo does not constitute an insurance offer under the Insurance Act, 1938.{' '}
+      <a href="/grievance" className="underline font-semibold hover:text-yellow-900">
+        Grievance
+      </a>{' '}
+      |{' '}
+      <a href="/privacy-notice" className="underline font-semibold hover:text-yellow-900">
+        Privacy Notice
+      </a>
+    </div>
+  )
+}
+
 function App() {
   const location = useLocation()
 
@@ -58,76 +85,106 @@ function App() {
   }, [location.pathname])
 
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<AuthPage />} />
-      <Route path="/signup" element={<AuthPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+    <div className="min-h-screen flex flex-col">
 
-      <Route
-        path="/dashboard/:id"
-        element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/policy/:id"
-        element={
-          <ProtectedRoute>
-            <PolicyPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/claims"
-        element={
-          <ProtectedRoute>
-            <ClaimsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/claim/:claim_id"
-        element={
-          <ProtectedRoute>
-            <ClaimDetailPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/notifications/:id"
-        element={
-          <ProtectedRoute>
-            <NotificationsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/payments/:id"
-        element={
-          <ProtectedRoute>
-            <PaymentsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/weather/:pincode"
-        element={
-          <ProtectedRoute>
-            <WeatherPage />
-          </ProtectedRoute>
-        }
-      />
+      {/* ── Compliance Banner — visible on every page ── */}
+      <ComplianceBanner />
 
-      <Route path="/admin" element={<AdminPage />} />
-      <Route path="/admin/claims" element={<AdminClaimsPage />} />
-      <Route path="/admin/riders" element={<AdminRidersPage />} />
-      <Route path="/preview" element={<PreviewPage />} />
+      <Routes>
 
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+        {/* ── Public routes ── */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/signup" element={<AuthPage />} />
+
+        {/* ── Phase 3: Compliance routes (public) ── */}
+        <Route path="/consent" element={<ConsentPage />} />
+        <Route path="/key-facts" element={<KeyFactsPage />} />
+        <Route path="/grievance" element={<GrievancePage />} />
+        <Route path="/privacy-notice" element={<PrivacyNoticePage />} />
+
+        {/* Register — after consent */}
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* ── Protected routes ── */}
+        <Route
+          path="/dashboard/:id"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/policy/:id"
+          element={
+            <ProtectedRoute>
+              <PolicyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/claims"
+          element={
+            <ProtectedRoute>
+              <ClaimsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/claim/:claim_id"
+          element={
+            <ProtectedRoute>
+              <ClaimDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications/:id"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payments/:id"
+          element={
+            <ProtectedRoute>
+              <PaymentsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/weather/:pincode"
+          element={
+            <ProtectedRoute>
+              <WeatherPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ── Phase 3: Privacy Dashboard (protected) ── */}
+        <Route
+          path="/privacy/:id"
+          element={
+            <ProtectedRoute>
+              <PrivacyDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ── Admin routes ── */}
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/claims" element={<AdminClaimsPage />} />
+        <Route path="/admin/riders" element={<AdminRidersPage />} />
+
+        {/* ── Misc ── */}
+        <Route path="/preview" element={<PreviewPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+
+      </Routes>
+    </div>
   )
 }
 
