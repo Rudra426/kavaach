@@ -317,3 +317,20 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     stop_scheduler()
+
+
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+
+# Serve static assets (JS, CSS, images built by Vite)
+if os.path.exists("static"):
+    app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+
+# Catch-all: serve index.html for any non-API route (React Router support)
+@app.get("/{full_path:path}", response_class=HTMLResponse)
+async def serve_frontend(full_path: str):
+    index_path = "static/index.html"
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return HTMLResponse("<h1>Frontend not built yet</h1>")

@@ -698,3 +698,6 @@ export interface WeatherAlert {
   type: string; message: string; severity: string
   threshold: number; actual_value: number; unit: string
 }
+
+const BASE_URL = "";
+// Empty string = same domain, so /predict, /register etc. work automatically
