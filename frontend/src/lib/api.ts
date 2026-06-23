@@ -250,10 +250,10 @@ function buildDemoClaimDetail(claimId: string): ClaimDetail {
     },
     payouts: [
       {
-        amount:     found.payout_amount,
-        type:       found.tier === 'GREEN' ? 'full' : 'partial',
-        status:     found.payout_amount > 0 ? 'processed' : 'pending',
-        upi_ref:    found.payout_amount > 0 ? `rzp_demo_${found.id}` : null,
+        amount:      found.payout_amount,
+        type:        found.tier === 'GREEN' ? 'full' : 'partial',
+        status:      found.payout_amount > 0 ? 'processed' : 'pending',
+        upi_ref:     found.payout_amount > 0 ? `rzp_demo_${found.id}` : null,
         credited_at: isoDaysAgo(2),
       },
     ],
@@ -271,10 +271,10 @@ function buildDemoNotifications(riderId: string): NotificationResponse {
     rider_id: riderId,
     unread_count: 4,
     notifications: [
-      { type: 'warning', title: 'Premium Due Soon',         message: '₹187 due in 2 day(s)',                               time: isoDaysAgo(0) },
-      { type: 'success', title: 'Payout Credited',          message: '₹1,440 credited to your UPI (GREEN tier)',            time: isoDaysAgo(2) },
+      { type: 'warning', title: 'Premium Due Soon',         message: '₹187 due in 2 day(s)',                                    time: isoDaysAgo(0) },
+      { type: 'success', title: 'Payout Credited',          message: '₹1,440 credited to your UPI (GREEN tier)',                 time: isoDaysAgo(2) },
       { type: 'alert',   title: 'FLOOD Alert in Mumbai',    message: 'Coverage active — payout will be processed automatically', time: isoDaysAgo(1) },
-      { type: 'info',    title: 'No-Claim Discount Active', message: '3 claim-free week(s) — 9% discount applied',          time: isoDaysAgo(0) },
+      { type: 'info',    title: 'No-Claim Discount Active', message: '3 claim-free week(s) — 9% discount applied',               time: isoDaysAgo(0) },
     ],
   }
 }
@@ -296,11 +296,12 @@ function buildDemoPayments(): PaymentResponse {
 
 function buildDemoWeather(pincode: string): WeatherResponse {
   const info = normalizePincodeInfo(pincode)
+  const alert: WeatherAlert = { type: 'flood', message: 'Heavy rain alert in your area', severity: 'high', threshold: 75, actual_value: 82, unit: '%' }
   return {
     pincode, city: info.city, area: info.area,
     temperature: 38, rainfall_probability: 82,
     wind_speed: 41, aqi: 176,
-    alerts: [{ type: 'flood', message: 'Heavy rain alert in your area', severity: 'high', threshold: 75, actual_value: 82, unit: '%' }],
+    alerts: [alert],
     coverage_active: true,
     thresholds: { flood: 75, heat: 43, aqi: 200, cyclone: 60 },
     last_updated: new Date().toISOString(),
@@ -312,21 +313,18 @@ function buildDemoAdminRiders(): AdminRider[] {
     {
       id: DEMO_ACCOUNT.riderId, name: DEMO_ACCOUNT.name,
       phone: DEMO_ACCOUNT.phone, pincode: DEMO_ACCOUNT.pincode,
-      city: DEMO_ACCOUNT.city,
-      platform: 'pharmeasy,netmeds',
+      city: DEMO_ACCOUNT.city, platform: 'pharmeasy,netmeds',
       weekly_earnings: 6200, created_at: isoDaysAgo(56),
     },
     {
       id: 'RIDER102', name: 'Priya Nair',
       phone: '9880012233', pincode: '560001', city: 'Bengaluru',
-      platform: 'tata1mg',
-      weekly_earnings: 5400, created_at: isoDaysAgo(40),
+      platform: 'tata1mg', weekly_earnings: 5400, created_at: isoDaysAgo(40),
     },
     {
       id: 'RIDER220', name: 'Arman Khan',
       phone: '9899944455', pincode: '110001', city: 'Delhi',
-      platform: 'apollo24x7',
-      weekly_earnings: 7200, created_at: isoDaysAgo(17),
+      platform: 'apollo24x7', weekly_earnings: 7200, created_at: isoDaysAgo(17),
     },
   ]
 }
@@ -407,7 +405,6 @@ export async function registerRider(payload: RegisterRequest): Promise<RegisterR
   }
 
   if (isOfflineMode()) return buildOfflineResponse()
-
   try {
     const { data } = await api.post<RegisterResponse>('/register', payload)
     return data
@@ -604,27 +601,6 @@ export function platformLabel(value: string): string {
     .map((v) => PLATFORM_LABELS[v.trim()] ?? v)
     .join(', ')
 }
-export interface WeatherAlert {
-  type:         string
-  message:      string
-  severity:     string
-  threshold:    number
-  actual_value: number
-  unit:         string
-}
 
-export interface WeatherResponse {
-  pincode:              string
-  city:                 string
-  area:                 string
-  temperature:          number | null
-  rainfall_probability: number | null
-  wind_speed:           number | null
-  aqi:                  number
-  alerts:               WeatherAlert[]
-  coverage_active:      boolean
-  thresholds?:          Record<string, number>
-  last_updated:         string
-}
-// Suppress unused import warning for WeatherAlert (used via types/api.ts)
+// Re-export for components that import from this file
 export type { WeatherAlert }
