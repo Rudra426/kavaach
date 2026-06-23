@@ -679,7 +679,6 @@ export interface WeatherAlert {
   thresholds?:  number
 }
 
-// UPDATE existing WeatherResponse — add thresholds + fix alerts type
 export interface WeatherResponse {
   pincode:              string
   city:                 string
@@ -688,9 +687,9 @@ export interface WeatherResponse {
   rainfall_probability: number | null
   wind_speed:           number | null
   aqi:                  number
-  alerts:               WeatherAlert[]      // ← change from Array<{...}>
+  alerts:               WeatherAlert[]      
   coverage_active:      boolean
-  thresholds:           Record<string, number>  // ← add this
+  thresholds?:          Record<string, number>
   last_updated:         string
 }
 
@@ -700,4 +699,3 @@ export interface WeatherAlert {
 }
 
 const BASE_URL = "";
-// Empty string = same domain, so /predict, /register etc. work automatically
