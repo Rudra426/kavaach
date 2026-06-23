@@ -183,7 +183,7 @@ export function DashboardPage() {
         <section className="overflow-hidden rounded-3xl bg-primary p-6 text-white shadow-card">
           <div className="flex flex-wrap justify-between gap-5">
             <div>
-              <p className="text-sm text-white/75">Weekly Coverage</p>
+              <p className="text-sm text-white/75">Yearly Coverage</p>
               <CurrencyCounter amount={profile.policy.coverage_amount} className="mt-2 block font-display text-5xl leading-none" />
               <p className="mt-3 text-sm text-white/75">Policy status: ACTIVE · Renews in {profile.policy.days_until_due ?? 0} days</p>
             </div>
