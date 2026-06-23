@@ -14,18 +14,15 @@ import type {
   RegisterRequest,
   RegisterResponse,
   RiderProfile,
+  WeatherResponse,
+  WeatherAlert,
 } from '../types/api'
-
-
 
 const baseURL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 let offlineModeUntil = 0
 
-
 const DAY_MS = 24 * 60 * 60 * 1000
 
-
-// ── Pharma delivery platforms — matches backend PLATFORM_ENC ─────────────────
 const PLATFORM_LABELS: Record<string, string> = {
   pharmeasy:  'PharmEasy',
   netmeds:    'Netmeds',
@@ -33,7 +30,6 @@ const PLATFORM_LABELS: Record<string, string> = {
   apollo24x7: 'Apollo 24×7',
   phonepe:    'PhonePe Health',
 }
-
 
 const PINCODE_LOOKUP: Record<string, { city: string; area: string; zone: string }> = {
   '400063': { city: 'Mumbai',    area: 'Andheri East',     zone: 'residential' },
@@ -49,7 +45,6 @@ const PINCODE_LOOKUP: Record<string, { city: string; area: string; zone: string 
   '600001': { city: 'Chennai',   area: "Parry's Corner",   zone: 'commercial'  },
 }
 
-
 export const DEMO_ACCOUNT = {
   riderId:  'DEMO001',
   phone:    '9999999999',
@@ -60,55 +55,44 @@ export const DEMO_ACCOUNT = {
   platform: 'pharmeasy,netmeds',
 }
 
-
 export const api = axios.create({ baseURL, timeout: 15000 })
-
 
 function isoDaysAgo(daysAgo: number): string {
   return new Date(Date.now() - daysAgo * DAY_MS).toISOString()
 }
 
-
 function isoDaysAhead(daysAhead: number): string {
   return new Date(Date.now() + daysAhead * DAY_MS).toISOString()
 }
-
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value))
 }
 
-
 function roundTo2(value: number): number {
   return Math.round(value * 100) / 100
 }
-
 
 function isNetworkError(error: unknown): boolean {
   return axios.isAxiosError(error) && !error.response
 }
 
-
 function isOfflineMode(): boolean {
   return Date.now() < offlineModeUntil
 }
-
 
 function enableOfflineMode(): void {
   offlineModeUntil = Date.now() + 60_000
 }
 
-
 function normalizePincodeInfo(pincode: string): { city: string; area: string; zone: string } {
   return PINCODE_LOOKUP[pincode] ?? { city: 'Unknown City', area: 'Unknown Area', zone: 'residential' }
 }
-
 
 function deriveRiskScore(pincode: string): number {
   const seed = pincode.replace(/\D/g, '').split('').reduce((sum, d) => sum + Number(d || 0), 0)
   return roundTo2(clamp(1.8 + ((seed * 17) % 32) / 10, 1, 5))
 }
-
 
 function riskLabel(score: number): string {
   if (score <= 2)   return 'Low'
@@ -116,15 +100,12 @@ function riskLabel(score: number): string {
   return 'High'
 }
 
-
 function normalizeDeliveryType(deliveryType: string): 'hyperlocal' | 'same_day' | 'scheduled' {
   const value = deliveryType.toLowerCase().replace('-', '_')
   if (value === 'hyperlocal' || value === 'same_day' || value === 'scheduled') return value
   return 'same_day'
 }
 
-
-// ── Local offline premium estimator ──────────────────────────────────────────
 function estimatePremiumLocally(payload: PredictRequest): PremiumQuote {
   const weeklyEarnings  = clamp(Number(payload.weekly_earnings) || 0, 1500, 15000)
   const deliveryType    = normalizeDeliveryType(payload.delivery_type)
@@ -133,10 +114,8 @@ function estimatePremiumLocally(payload: PredictRequest): PremiumQuote {
   const noClaimWeeks    = clamp(Number(payload.no_claim_weeks) || 0, 0, 7)
   const pincode         = payload.pincode || DEMO_ACCOUNT.pincode
 
-
   const { city, area, zone } = normalizePincodeInfo(pincode)
   const riskScore = deriveRiskScore(pincode)
-
 
   const modelMultiplier     = { hyperlocal: 1.35, same_day: 1.0, scheduled: 0.76 }[deliveryType]
   const coldChainMultiplier = payload.cold_chain
@@ -148,16 +127,13 @@ function estimatePremiumLocally(payload: PredictRequest): PremiumQuote {
   const deliveriesFactor    = 1 + (avgDeliveries - 10) * 0.01
   const riskFactor          = 1 + ((riskScore - 1) / 4) * 0.22
 
-
   let base = 35
   if (weeklyEarnings >= 3000 && weeklyEarnings < 6000) base = 60
   if (weeklyEarnings >= 6000) base = 95
 
-
   const raw    = base * modelMultiplier * coldChainMultiplier * platformMultiplier * deliveriesFactor * riskFactor * consistencyDiscount * noClaimDiscount
   const capped = Math.min(raw, weeklyEarnings * 0.15)
   const weeklyPremium = roundTo2(clamp(capped, 25, 250))
-
 
   return {
     weekly_premium:  weeklyPremium,
@@ -171,8 +147,6 @@ function estimatePremiumLocally(payload: PredictRequest): PremiumQuote {
   }
 }
 
-
-// ── Demo data builders ────────────────────────────────────────────────────────
 function buildDemoClaims(riderId: string): ClaimListItem[] {
   return [
     {
@@ -195,7 +169,6 @@ function buildDemoClaims(riderId: string): ClaimListItem[] {
     },
   ]
 }
-
 
 function buildDemoDashboard(riderId: string): DashboardResponse {
   const claims = buildDemoClaims(riderId)
@@ -221,7 +194,6 @@ function buildDemoDashboard(riderId: string): DashboardResponse {
   }
 }
 
-
 function buildDemoPolicy(riderId: string): PolicyResponse {
   return {
     policy_id: 'POLDEMO1', rider_id: riderId,
@@ -234,7 +206,6 @@ function buildDemoPolicy(riderId: string): PolicyResponse {
     start_date: isoDaysAgo(56),
   }
 }
-
 
 function buildDemoRiderProfile(riderId: string): RiderProfile {
   return {
@@ -256,7 +227,6 @@ function buildDemoRiderProfile(riderId: string): RiderProfile {
     stats: { total_claims: 3, paid_claims: 2, total_received: 2400, total_premium_paid: 1496 },
   }
 }
-
 
 function buildDemoClaimDetail(claimId: string): ClaimDetail {
   const claims = buildDemoClaims(DEMO_ACCOUNT.riderId)
@@ -296,7 +266,6 @@ function buildDemoClaimDetail(claimId: string): ClaimDetail {
   }
 }
 
-
 function buildDemoNotifications(riderId: string): NotificationResponse {
   return {
     rider_id: riderId,
@@ -309,7 +278,6 @@ function buildDemoNotifications(riderId: string): NotificationResponse {
     ],
   }
 }
-
 
 function buildDemoPayments(): PaymentResponse {
   const payments = Array.from({ length: 8 }, (_, i) => {
@@ -326,7 +294,6 @@ function buildDemoPayments(): PaymentResponse {
   return { policy_id: 'POLDEMO1', weekly_premium: 187, next_due: isoDaysAhead(4), payments }
 }
 
-
 function buildDemoWeather(pincode: string): WeatherResponse {
   const info = normalizePincodeInfo(pincode)
   return {
@@ -339,7 +306,6 @@ function buildDemoWeather(pincode: string): WeatherResponse {
     last_updated: new Date().toISOString(),
   }
 }
-
 
 function buildDemoAdminRiders(): AdminRider[] {
   return [
@@ -365,7 +331,6 @@ function buildDemoAdminRiders(): AdminRider[] {
   ]
 }
 
-
 function buildDemoAdminClaims(): ClaimListItem[] {
   return [
     ...buildDemoClaims(DEMO_ACCOUNT.riderId),
@@ -384,7 +349,6 @@ function buildDemoAdminClaims(): ClaimListItem[] {
   ]
 }
 
-
 function buildDemoAdminHeatmap(): AdminHeatmapPoint[] {
   return [
     { pincode: '400063', city: 'Mumbai',    area: 'Andheri East',    risk_score: 3.4, active_riders: 14, active_triggers: 1, flood_risk: 0.74, heat_risk: 0.52, aqi_risk: 0.47 },
@@ -395,19 +359,13 @@ function buildDemoAdminHeatmap(): AdminHeatmapPoint[] {
   ]
 }
 
-
 function buildDemoAdminStats(): AdminStats {
   return { total_riders: 34, active_policies: 31, total_claims: 19, total_payouts: 15, total_paid_amount: 114260 }
 }
 
-
 function isDemoRider(riderId: string): boolean {
   return riderId.toUpperCase().startsWith('DEMO')
 }
-
-
-// ── Public API functions ──────────────────────────────────────────────────────
-
 
 export async function predictPremium(payload: PredictRequest): Promise<PremiumQuote> {
   if (isOfflineMode()) return estimatePremiumLocally(payload)
@@ -419,7 +377,6 @@ export async function predictPremium(payload: PredictRequest): Promise<PremiumQu
     return estimatePremiumLocally(payload)
   }
 }
-
 
 export async function registerRider(payload: RegisterRequest): Promise<RegisterResponse> {
   const buildOfflineResponse = (): RegisterResponse => {
@@ -460,7 +417,6 @@ export async function registerRider(payload: RegisterRequest): Promise<RegisterR
   }
 }
 
-
 export async function getDashboard(riderId: string): Promise<DashboardResponse> {
   if (isDemoRider(riderId)) return buildDemoDashboard(riderId)
   try {
@@ -471,7 +427,6 @@ export async function getDashboard(riderId: string): Promise<DashboardResponse> 
     throw error
   }
 }
-
 
 export async function getPolicy(riderId: string): Promise<PolicyResponse> {
   if (isDemoRider(riderId)) return buildDemoPolicy(riderId)
@@ -484,7 +439,6 @@ export async function getPolicy(riderId: string): Promise<PolicyResponse> {
   }
 }
 
-
 export async function getRiderProfile(riderId: string): Promise<RiderProfile> {
   if (isDemoRider(riderId)) return buildDemoRiderProfile(riderId)
   try {
@@ -495,7 +449,6 @@ export async function getRiderProfile(riderId: string): Promise<RiderProfile> {
     throw error
   }
 }
-
 
 export async function getClaim(claimId: string): Promise<ClaimDetail> {
   try {
@@ -509,7 +462,6 @@ export async function getClaim(claimId: string): Promise<ClaimDetail> {
   }
 }
 
-
 export async function getNotifications(riderId: string): Promise<NotificationResponse> {
   if (isDemoRider(riderId)) return buildDemoNotifications(riderId)
   try {
@@ -520,7 +472,6 @@ export async function getNotifications(riderId: string): Promise<NotificationRes
     throw error
   }
 }
-
 
 export async function getPayments(riderId: string): Promise<PaymentResponse> {
   if (isDemoRider(riderId)) return buildDemoPayments()
@@ -533,7 +484,6 @@ export async function getPayments(riderId: string): Promise<PaymentResponse> {
   }
 }
 
-
 export async function payNow(riderId: string): Promise<{ payment_link: string }> {
   if (isDemoRider(riderId)) return { payment_link: 'https://rzp.io/demo-pay' }
   try {
@@ -544,7 +494,6 @@ export async function payNow(riderId: string): Promise<{ payment_link: string }>
     throw error
   }
 }
-
 
 export async function subscribePremium(riderId: string): Promise<{ payment_link: string }> {
   if (isDemoRider(riderId)) return { payment_link: 'https://rzp.io/demo-autodebit' }
@@ -557,7 +506,6 @@ export async function subscribePremium(riderId: string): Promise<{ payment_link:
   }
 }
 
-
 export async function getWeather(pincode: string): Promise<WeatherResponse> {
   try {
     const { data } = await api.get<WeatherResponse>(`/weather/${pincode}`)
@@ -567,7 +515,6 @@ export async function getWeather(pincode: string): Promise<WeatherResponse> {
     throw error
   }
 }
-
 
 export async function getAdminStats(): Promise<AdminStats> {
   try {
@@ -579,7 +526,6 @@ export async function getAdminStats(): Promise<AdminStats> {
   }
 }
 
-
 export async function getAdminClaims(): Promise<ClaimListItem[]> {
   try {
     const { data } = await api.get<ClaimListItem[]>('/admin/claims')
@@ -589,7 +535,6 @@ export async function getAdminClaims(): Promise<ClaimListItem[]> {
     throw error
   }
 }
-
 
 export async function getAdminRiders(): Promise<AdminRider[]> {
   try {
@@ -601,7 +546,6 @@ export async function getAdminRiders(): Promise<AdminRider[]> {
   }
 }
 
-
 export async function getAdminHeatmap(): Promise<AdminHeatmapPoint[]> {
   try {
     const { data } = await api.get<AdminHeatmapPoint[]>('/admin/heatmap')
@@ -611,7 +555,6 @@ export async function getAdminHeatmap(): Promise<AdminHeatmapPoint[]> {
     throw error
   }
 }
-
 
 export async function approveClaim(claimId: string): Promise<{ approved: boolean }> {
   try {
@@ -623,7 +566,6 @@ export async function approveClaim(claimId: string): Promise<{ approved: boolean
   }
 }
 
-
 export async function rejectClaim(claimId: string): Promise<{ rejected: boolean }> {
   try {
     const { data } = await api.post<{ rejected: boolean }>(`/admin/reject/${claimId}`)
@@ -634,12 +576,10 @@ export async function rejectClaim(claimId: string): Promise<{ rejected: boolean 
   }
 }
 
-
 export async function getClaimsForRider(riderId: string): Promise<ClaimListItem[]> {
   const claims = await getAdminClaims()
   return claims.filter((c) => c.rider_id === riderId)
 }
-
 
 export async function loginByPhone(phone: string): Promise<AdminRider | null> {
   if (phone === DEMO_ACCOUNT.phone) {
@@ -658,8 +598,6 @@ export async function loginByPhone(phone: string): Promise<AdminRider | null> {
   return riders.find((r) => r.phone === phone) ?? null
 }
 
-
-// ── Utility: human-readable platform label from stored value ─────────────────
 export function platformLabel(value: string): string {
   return value
     .split(',')
@@ -667,35 +605,5 @@ export function platformLabel(value: string): string {
     .join(', ')
 }
 
-
-// ADD this new interface
-export interface WeatherAlert {
-  type:         string
-  message:      string
-  severity:     string
-  threshold:    number
-  actual_value: number
-  unit:         string
-  thresholds?:  number
-}
-
-export interface WeatherResponse {
-  pincode:              string
-  city:                 string
-  area:                 string
-  temperature:          number | null
-  rainfall_probability: number | null
-  wind_speed:           number | null
-  aqi:                  number
-  alerts:               WeatherAlert[]      
-  coverage_active:      boolean
-  thresholds?:          Record<string, number>
-  last_updated:         string
-}
-
-export interface WeatherAlert {
-  type: string; message: string; severity: string
-  threshold: number; actual_value: number; unit: string
-}
-
-const BASE_URL = "";
+// Suppress unused import warning for WeatherAlert (used via types/api.ts)
+export type { WeatherAlert }
