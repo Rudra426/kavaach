@@ -48,7 +48,6 @@ export interface RegisterRequest {
   cold_chain:             boolean
   medicine_type:          string
   avg_deliveries_per_day: number
-  // Phase 3 — DPDP consent forwarded to backend
   consent?:               ConsentRecord | null
 }
 
@@ -141,13 +140,13 @@ export interface DashboardResponse {
     next_payment_due: string | null
   }
   claims: Array<{
-    id:           string
-    trigger_id:   string
-    fraud_score:  number
-    tier:         Tier
-    status:       string
+    id:            string
+    trigger_id:    string
+    fraud_score:   number
+    tier:          Tier
+    status:        string
     payout_amount: number
-    created_at:   string
+    created_at:    string
   }>
   active_triggers: Array<{ id: string; type: string; severity: number; fired_at: string }>
   weather_alert:   boolean
@@ -196,12 +195,21 @@ export interface PaymentResponse {
   weekly_premium: number
   next_due:       string
   payments: Array<{
-    week:    number
+    week:     number
     due_date: string
-    amount:  number
-    status:  string
-    upi_ref: string | null
+    amount:   number
+    status:   string
+    upi_ref:  string | null
   }>
+}
+
+export interface WeatherAlert {
+  type:         string
+  message:      string
+  severity:     string
+  threshold:    number
+  actual_value: number
+  unit:         string
 }
 
 export interface WeatherResponse {
@@ -212,9 +220,10 @@ export interface WeatherResponse {
   rainfall_probability: number | null
   wind_speed:           number | null
   aqi:                  number
-  alerts: Array<{ type: string; message: string; severity: string }>
-  coverage_active: boolean
-  last_updated:    string
+  alerts:               WeatherAlert[]
+  coverage_active:      boolean
+  thresholds?:          Record<string, number>
+  last_updated:         string
 }
 
 export interface AdminStats {
