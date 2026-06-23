@@ -19,7 +19,7 @@
 | 🌐 Live Demo | https://kavaach.onrender.com |
 | 📊 Pitch Deck | _[Add public Google Slides / Drive link here]_ |
 | 🎬 Demo Video | _[Add public YouTube / Drive video link here]_ |
-| 💻 Repository | https://github.com/[your-username]/kavaach |
+| 💻 Repository | https://github.com/[Rudra426]/kavaach |
 
 ---
 
