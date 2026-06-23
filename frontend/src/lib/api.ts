@@ -14,7 +14,6 @@ import type {
   RegisterRequest,
   RegisterResponse,
   RiderProfile,
-  WeatherResponse,
 } from '../types/api'
 
 
@@ -677,6 +676,7 @@ export interface WeatherAlert {
   threshold:    number
   actual_value: number
   unit:         string
+  thresholds?:  number
 }
 
 // UPDATE existing WeatherResponse — add thresholds + fix alerts type
