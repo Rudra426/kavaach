@@ -604,6 +604,27 @@ export function platformLabel(value: string): string {
     .map((v) => PLATFORM_LABELS[v.trim()] ?? v)
     .join(', ')
 }
+export interface WeatherAlert {
+  type:         string
+  message:      string
+  severity:     string
+  threshold:    number
+  actual_value: number
+  unit:         string
+}
 
+export interface WeatherResponse {
+  pincode:              string
+  city:                 string
+  area:                 string
+  temperature:          number | null
+  rainfall_probability: number | null
+  wind_speed:           number | null
+  aqi:                  number
+  alerts:               WeatherAlert[]
+  coverage_active:      boolean
+  thresholds?:          Record<string, number>
+  last_updated:         string
+}
 // Suppress unused import warning for WeatherAlert (used via types/api.ts)
 export type { WeatherAlert }
